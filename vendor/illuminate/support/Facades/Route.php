@@ -32,7 +32,7 @@ class Route extends Facade
 {
     /**
      * Get the registered name of the component.
-     *
+     * Route的容器代理名是router
      * @return string
      */
     protected static function getFacadeAccessor()

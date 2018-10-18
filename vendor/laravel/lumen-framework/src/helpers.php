@@ -362,6 +362,7 @@ if (! function_exists('view')) {
     /**
      * Get the evaluated view contents for the given view.
      *
+     * 手册说view辅助函数等价于 View::mack(xxx)
      * @param  string  $view
      * @param  array   $data
      * @param  array   $mergeData

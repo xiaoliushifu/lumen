@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,5 +14,8 @@
 $router->get('/', function () use ($router) {
     var_dump($router);
     var_dump($router->app);
+    //DB这个facade没有解析到，说明并没有注册到容器里
+    //我们后续再说
+    DB::select('test');
     return $router->app->version();
 });
