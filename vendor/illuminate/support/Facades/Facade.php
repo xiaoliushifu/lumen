@@ -9,6 +9,7 @@ use Mockery\MockInterface;
 abstract class Facade
 {
     /**
+     * 这个属性是啥时候设置的呢？
      * The application instance being facaded.
      *
      * @var \Illuminate\Contracts\Foundation\Application
@@ -16,6 +17,7 @@ abstract class Facade
     protected static $app;
 
     /**
+     * 解析的对象都临时存放到Facade基类的静态属性（数组）里，不用再去容器中找
      * The resolved object instances.
      *
      * @var array
@@ -119,6 +121,7 @@ abstract class Facade
     }
 
     /**
+     * 得到门面facade背后的根对象
      * Get the root object behind the facade.
      *
      * @return mixed
@@ -129,6 +132,9 @@ abstract class Facade
     }
 
     /**
+     * 该方法是每个想要实现Facade必须实现的，返回组件的真正名称即可
+     * 具体实现的Facades背后的底层类都是谁，可以去这里看看
+     * https://laravel-china.org/docs/laravel/5.7/facades/2251
      * Get the registered name of the component.
      *
      * @return string
@@ -142,12 +148,13 @@ abstract class Facade
 
     /**
      * Resolve the facade root instance from the container.
-     *
+     * 从容器里解析出Facade根实例对象,也就是所谓的底层类
      * @param  string|object  $name
      * @return mixed
      */
     protected static function resolveFacadeInstance($name)
     {
+        //已经是对象，直接返回即可
         if (is_object($name)) {
             return $name;
         }
@@ -155,7 +162,7 @@ abstract class Facade
         if (isset(static::$resolvedInstance[$name])) {
             return static::$resolvedInstance[$name];
         }
-
+        //最终来源于$app数组，那么这$app到底是什么呢，以后再说？
         return static::$resolvedInstance[$name] = static::$app[$name];
     }
 
@@ -203,7 +210,8 @@ abstract class Facade
 
     /**
      * Handle dynamic, static calls to the object.
-     *
+     * 这就是Facade实现的关键，根据PHP__callStatic魔术方法就是在静态调用一个不存在的方法时，
+     * 就会调用它。
      * @param  string  $method
      * @param  array   $args
      * @return mixed
@@ -212,12 +220,14 @@ abstract class Facade
      */
     public static function __callStatic($method, $args)
     {
+        //获得类的真正代理的实例（别名背后的真正身份）
         $instance = static::getFacadeRoot();
 
+        //没有实例就抛异常
         if (! $instance) {
             throw new RuntimeException('A facade root has not been set.');
         }
-
+        //以真正实例再次调用该方法一次。到此大家Facade是啥了吧？
         return $instance->$method(...$args);
     }
 }
