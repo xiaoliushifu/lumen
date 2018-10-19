@@ -99,20 +99,20 @@ class Application extends Container
         $this->bootstrapRouter();
     }
 
-    /**
+    /** 启动容器，所谓容器就是应用对象的几个静态属性（数组或静态属性）填充值而已
      * Bootstrap the application container.
      *
      * @return void
      */
     protected function bootstrapContainer()
     {
-        static::setInstance($this);
+        static::setInstance($this);//静态变量，对自身的引用
 
         $this->instance('app', $this);
         $this->instance('Laravel\Lumen\Application', $this);
-
+        //键值对的值也可以是字符串
         $this->instance('path', $this->path());
-
+        //注册别名数组，关键属性之一
         $this->registerContainerAliases();
     }
 
@@ -829,8 +829,10 @@ class Application extends Container
     }
 
     /**
+     * 注册核心组件的别名，容器里的组件的别名，不是容器别名。
+     * 此处英文有误？
      * Register the core container aliases.
-     *
+     * 注意，下标是类的全名称，值是真正的别名（奇怪，为啥不是别名为下标，值是全名称呢？）
      * @return void
      */
     protected function registerContainerAliases()
