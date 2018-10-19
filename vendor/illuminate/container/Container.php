@@ -13,6 +13,7 @@ use Illuminate\Contracts\Container\Container as ContainerContract;
 class Container implements ArrayAccess, ContainerContract
 {
     /**
+     * 容器静态属性，由于其静态属性，所有子类都共享
      * The current globally available container (if any).
      *
      * @var static
@@ -27,6 +28,7 @@ class Container implements ArrayAccess, ContainerContract
     protected $resolved = [];
 
     /**
+     * 容器的关键数组属性之一：bindings
      * The container's bindings.
      *
      * @var array
@@ -41,6 +43,7 @@ class Container implements ArrayAccess, ContainerContract
     protected $methodBindings = [];
 
     /**
+     * 容器的关键属性之一：instances
      * The container's shared instances.
      *
      * @var array
@@ -48,6 +51,7 @@ class Container implements ArrayAccess, ContainerContract
     protected $instances = [];
 
     /**
+     * 容器的关键属性之一：$aliases
      * The registered type aliases.
      *
      * @var array
@@ -143,6 +147,7 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
+     * 检测是否绑定过（在三大属性里是否有对应下标：bindings,instances,aliases)
      * Determine if the given abstract type has been bound.
      *
      * @param  string  $abstract
@@ -156,6 +161,7 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
+     * 是否绑定的别名方法
      *  {@inheritdoc}
      */
     public function has($id)
@@ -193,6 +199,7 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
+     * 是不是一个别名
      * Determine if a given string is an alias.
      *
      * @param  string  $name
@@ -359,6 +366,7 @@ class Container implements ArrayAccess, ContainerContract
     }
 
     /**
+     * 注册共享实例（单例）
      * Register an existing instance as shared in the container.
      *
      * @param  string  $abstract
@@ -379,6 +387,7 @@ class Container implements ArrayAccess, ContainerContract
         $this->instances[$abstract] = $instance;
 
         if ($isBound) {
+            //如果是二次绑定，需要触发一些事件，来更新下东西，可能影响之前的东西吧
             $this->rebound($abstract);
         }
 
