@@ -23,3 +23,10 @@ $router->get('/', function () use ($router) {
 $router->get('foo',['as'=>'foo', function () {
     return 'Hello World';
 }]);
+
+// 中间件可以分配到指定的路由,
+//中间件的生效范围多得是，还需慢慢研究
+$router->get('profile', [
+    'middleware' => App\Http\Middleware\OldMiddleware::class,
+    'uses' => 'ExampleController@show'
+]);
