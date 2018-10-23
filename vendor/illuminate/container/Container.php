@@ -223,6 +223,7 @@ class Container implements ArrayAccess, ContainerContract
         // If no concrete type was given, we will simply set the concrete type to the
         // abstract type. After that, the concrete type to be registered as shared
         // without being forced to state their classes in both of the parameters.
+        //删除旧绑定
         $this->dropStaleInstances($abstract);
 
         if (is_null($concrete)) {
@@ -232,6 +233,7 @@ class Container implements ArrayAccess, ContainerContract
         // If the factory is not a Closure, it means it is just a class name which is
         // bound into this container to the abstract type and we will just wrap it
         // up inside its own Closure to give us more convenience when extending.
+         //如果$concrete不是回掉函数那就包裹为回掉，后续扩展时比较方便
         if (! $concrete instanceof Closure) {
             $concrete = $this->getClosure($abstract, $concrete);
         }
@@ -1113,7 +1115,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Drop all of the stale instances and aliases.
-     *
+     * 删除旧的抽象接口
      * @param  string  $abstract
      * @return void
      */
