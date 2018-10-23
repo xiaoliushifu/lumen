@@ -52,7 +52,7 @@ $app->singleton(
 |--------------------------------------------------------------------------
 | Register Middleware
 |--------------------------------------------------------------------------
-|
+| 注册全局中间件，任何请求都拦截
 | Next, we will register the middleware with the application. These can
 | be global middleware that run before and after each request into a
 | route or middleware that'll be assigned to some specific routes.
@@ -60,7 +60,7 @@ $app->singleton(
 */
 
 // $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
+//    App\Http\Middleware\OldMiddleware::class
 // ]);
 
 // $app->routeMiddleware([
