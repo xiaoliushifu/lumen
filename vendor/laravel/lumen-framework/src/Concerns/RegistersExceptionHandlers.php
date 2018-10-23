@@ -38,18 +38,19 @@ trait RegistersExceptionHandlers
      */
     protected function registerErrorHandling()
     {
+        // 报告所有 PHP 错误
         error_reporting(-1);
-
+         //把错误转为异常抛出
         set_error_handler(function ($level, $message, $file = '', $line = 0) {
             if (error_reporting() & $level) {
                 throw new ErrorException($message, 0, $level, $file, $line);
             }
         });
-
+          //注册异常处理器
         set_exception_handler(function ($e) {
             $this->handleUncaughtException($e);
         });
-
+        // 注册脚本停用处理器（何时生效，exit生效不？看手册）
         register_shutdown_function(function () {
             $this->handleShutdown();
         });

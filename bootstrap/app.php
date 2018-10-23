@@ -35,7 +35,7 @@ $app = new Laravel\Lumen\Application(
 | Now we will register a few bindings in the service container. We will
 | register the exception handler and the console kernel. You may add
 | your own bindings here if you like or you can make another file.
-|
+| singleton就是注册单例（bind方法的第三个参数是true)
 */
 
 $app->singleton(
