@@ -22,9 +22,9 @@ class OldMiddleware
     public function handle($request, Closure $next)
     {
         var_dump($request);
-        if ($request->input('age') <= 200) {
-            return redirect('foo');
-        }
+//        if ($request->input('age') <= 200) {
+//            return redirect('foo');
+//        }
 
         return $next($request);
     }
