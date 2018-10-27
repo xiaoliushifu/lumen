@@ -23,7 +23,8 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
-// $app->withFacades();
+//注册门面（也就是所谓的组件别名机制）
+ $app->withFacades();
 
 // $app->withEloquent();
 
