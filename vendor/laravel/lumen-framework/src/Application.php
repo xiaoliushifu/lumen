@@ -24,7 +24,7 @@ class Application extends Container
     use Concerns\RoutesRequests,
         Concerns\RegistersExceptionHandlers;
 
-    /**
+    /** 类别名是否已经注册了
      * Indicates if the class aliases have been registered.
      *
      * @var bool
@@ -210,7 +210,7 @@ class Application extends Container
         return $this->register($provider);
     }
 
-    /**
+    /**好好看看这个方法
      * Resolve the given type from the container.
      *
      * @param  string  $abstract
@@ -220,7 +220,8 @@ class Application extends Container
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
-
+        //在解析组件之前，给一个机会把如下的一些组件注册到容器中，这有点像Yii2的行为，在触发beforeAction的时候才注册的事件
+        //换句话说，在真正需要的时候才实例化加载到内存里
         if (array_key_exists($abstract, $this->availableBindings) &&
             ! array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)) {
             $this->{$method = $this->availableBindings[$abstract]}();
@@ -322,7 +323,7 @@ class Application extends Container
 
     /**
      * Register container bindings for the application.
-     *
+     * 以db举例，db才是真正的别名，真正的组件类是databaseManager
      * @return void
      */
     protected function registerDatabaseBindings()
@@ -641,6 +642,7 @@ class Application extends Container
     }
 
     /**
+     * 注册门面（别名），这是门面的开始
      * Register the facades for the application.
      *
      * @param  bool  $aliases
@@ -649,7 +651,7 @@ class Application extends Container
      */
     public function withFacades($aliases = true, $userAliases = [])
     {
-        Facade::setFacadeApplication($this);
+        Facade::setFacadeApplication($this);//Facade引用当前应用对象
 
         if ($aliases) {
             $this->withAliases($userAliases);
@@ -657,6 +659,7 @@ class Application extends Container
     }
 
     /**
+     * 注册应用里的别名，也就是门面（Facade)，lumen默认11个
      * Register the aliases for the application.
      *
      * @param  array  $userAliases
@@ -682,7 +685,7 @@ class Application extends Container
             static::$aliasesRegistered = true;
 
             $merged = array_merge($defaults, $userAliases);
-
+             //key是原始的，真正的组件；而value则是简写的别名  class_alias是类别名函数，是PHP原生函数 php5.3引入！
             foreach ($merged as $original => $alias) {
                 class_alias($original, $alias);
             }
@@ -700,6 +703,7 @@ class Application extends Container
     }
 
     /**
+     * path是指app目录的路径，basePath指的是项目根目录
      * Get the path to the application "app" directory.
      *
      * @return string

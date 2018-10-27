@@ -149,6 +149,11 @@ abstract class Facade
     /**
      * Resolve the facade root instance from the container.
      * 从容器里解析出Facade根实例对象,也就是所谓的底层类
+     * 但是要注意，$name在这里仍然是别名，真正背后的绑定关系并不是在Facade里确定的
+     * Facade可以理解是容器里组件别名的别名。比如
+     * DB==>db==>databaseManager
+     * 这里DB是facade，它是db的别名
+     * db是容器组件的别名，它是databaseManager的别名
      * @param  string|object  $name
      * @return mixed
      */
@@ -162,7 +167,7 @@ abstract class Facade
         if (isset(static::$resolvedInstance[$name])) {
             return static::$resolvedInstance[$name];
         }
-        //最终来源于$app数组，那么这$app到底是什么呢，以后再说？
+        //最终来源于$app，也就是容器
         return static::$resolvedInstance[$name] = static::$app[$name];
     }
 
@@ -198,6 +203,7 @@ abstract class Facade
     }
 
     /**
+     * 设置应用实例（容器），门面解析对象时使用
      * Set the application instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app

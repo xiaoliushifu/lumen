@@ -609,7 +609,7 @@ class Container implements ArrayAccess, ContainerContract
         throw new EntryNotFoundException;
     }
 
-    /**
+    /**这是make方法的底层，
      * Resolve the given type from the container.
      *
      * @param  string  $abstract
@@ -657,7 +657,7 @@ class Container implements ArrayAccess, ContainerContract
         if ($this->isShared($abstract) && ! $needsContextualBuild) {
             $this->instances[$abstract] = $object;
         }
-
+        //每次解析一个对象的时候，都会触发一个事件
         $this->fireResolvingCallbacks($abstract, $object);
 
         // Before returning, we will also set the resolved flag to "true" and pop off
@@ -733,7 +733,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Determine if the given concrete is buildable.
-     *
+     *可构建，即 抽象=具体，或者具体是匿名函数
      * @param  mixed   $concrete
      * @param  string  $abstract
      * @return bool
@@ -986,7 +986,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Fire all of the resolving callbacks.
-     *
+     * 触发所有的解析回掉，所有？全局回掉，指定类型的回掉，后续再分析吧
      * @param  string  $abstract
      * @param  mixed   $object
      * @return void
@@ -998,7 +998,7 @@ class Container implements ArrayAccess, ContainerContract
         $this->fireCallbackArray(
             $object, $this->getCallbacksForType($abstract, $object, $this->resolvingCallbacks)
         );
-
+        //【解析后】回掉，也就是所谓的after
         $this->fireAfterResolvingCallbacks($abstract, $object);
     }
 
@@ -1195,7 +1195,7 @@ class Container implements ArrayAccess, ContainerContract
         return $this->bound($key);
     }
 
-    /**
+    /**容器基类实现了ArrayAccess数组访问接口必须实现的四个方法之一
      * Get the value at a given offset.
      *
      * @param  string  $key
