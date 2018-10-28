@@ -21,11 +21,15 @@ $router->get('/', function () use ($router) {
     //了解了上述Facade的核心后，大家还关心的是，背后真正的功能类到底是哪个，如何确定？稍后再说
 
     //我们后续再说
-    DB::select('test');
+//    DB::select('test');
+    Log::Info('Hello world');
+    //第二次再使用时已经无需去容器里实例化了，它已经在instances数组里了
+    Log::Info('Hello world2');
     return $router->app->version();
 });
 
 $router->get('foo',['as'=>'foo', function () {
+    Log::Info('Hello world');
     return 'Hello World';
 }]);
 

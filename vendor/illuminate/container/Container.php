@@ -212,7 +212,9 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Register a binding with the container.
-     *
+     * 注册到bindings这个数组里，值是固定两个元素的二维数组。
+     * 按照laravel的习惯，第一个元素都是一个匿名函数
+     * 第二个shared参数是布尔，表示是单例或者非单例
      * @param  string  $abstract
      * @param  \Closure|string|null  $concrete
      * @param  bool  $shared
@@ -223,7 +225,7 @@ class Container implements ArrayAccess, ContainerContract
         // If no concrete type was given, we will simply set the concrete type to the
         // abstract type. After that, the concrete type to be registered as shared
         // without being forced to state their classes in both of the parameters.
-        //删除旧绑定
+        //删除旧的别名和旧的实例
         $this->dropStaleInstances($abstract);
 
         if (is_null($concrete)) {
@@ -331,7 +333,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Register a shared binding in the container.
-     *
+     * 底层方法，注册共享实例也就是单例的方法（常驻内存）
      * @param  string  $abstract
      * @param  \Closure|string|null  $concrete
      * @return void
@@ -587,7 +589,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Resolve the given type from the container.
-     *
+     * 根据给定的类型解析容器中的对象，make是常用的，获取容器里对象的方法
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
@@ -745,7 +747,8 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Instantiate a concrete instance of the given type.
-     *
+     * build方法就是解析容器的对象（实例化）
+     * 如果concrete是匿名函数，则不必走反射过程，很多情况下laravel都喜欢用匿名函数而非反射
      * @param  string  $concrete
      * @return mixed
      *
@@ -756,6 +759,7 @@ class Container implements ArrayAccess, ContainerContract
         // If the concrete type is actually a Closure, we will just execute it and
         // hand back the results of the functions, which allows functions to be
         // used as resolvers for more fine-tuned resolution of these objects.
+        //这句话说明了，laravel使用匿名函数，是为了更精细地（fine-tuned)解析对象，不必走下面反射过程
         if ($concrete instanceof Closure) {
             return $concrete($this, $this->getLastParameterOverride());
         }
