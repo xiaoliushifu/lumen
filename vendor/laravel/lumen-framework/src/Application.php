@@ -54,7 +54,9 @@ class Application extends Container
 
     /**
      * The service binding methods that have been executed.
-     *
+     * 缓存已经被执行过的各种容器对象绑定（注册）方法，
+     * 这是所有Facade背后功能类绑定的开始（即何时注入到容器）
+     * 也是以后不再重复绑定的判断依据
      * @var array
      */
     protected $ranServiceBinders = [];
@@ -220,7 +222,7 @@ class Application extends Container
     public function make($abstract, array $parameters = [])
     {
         $abstract = $this->getAlias($abstract);
-        //在解析组件之前，给一个机会把如下的一些组件注册到容器中，这有点像Yii2的行为，在触发beforeAction的时候才注册的事件
+        //在解析组件之前，给一个机会把$abstract表示的一些组件注册到容器中，这有点像Yii2的行为，在触发beforeAction的时候才注册的事件
         //换句话说，在真正需要的时候才实例化加载到内存里
         if (array_key_exists($abstract, $this->availableBindings) &&
             ! array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)) {
@@ -390,7 +392,7 @@ class Application extends Container
         });
     }
 
-    /**
+    /**Log组件注册到容器中
      * Register container bindings for the application.
      *
      * @return void

@@ -132,7 +132,11 @@ abstract class Facade
     }
 
     /**
-     * 该方法是每个想要实现Facade必须实现的，返回组件的真正名称即可
+     * 该方法是每个想要实现Facade必须实现的，返回组件的别名即可，这就解释了为啥所有Facade都只有这一个方法的原因
+     * 注意，这里返回的仍然是容器里对象的别名，并不是真正的对象类全名称。
+     * 在获得了对象的别名后，接下来就用容器的make方法获得真正的对象。
+     * 还是那句话，Facade是容器里所有对象的别名的别名：
+     * Facade=====>别名=====》对象
      * 具体实现的Facades背后的底层类都是谁，可以去这里看看
      * https://laravel-china.org/docs/laravel/5.7/facades/2251
      * Get the registered name of the component.
