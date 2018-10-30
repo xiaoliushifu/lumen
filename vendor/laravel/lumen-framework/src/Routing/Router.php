@@ -22,14 +22,16 @@ class Router
 
     /**
      * All of the routes waiting to be registered.
-     *
+     * 所有注册的路由，都将存到这里，注意格式
+     * key  GET/profile
+     * value是一个三元素的数组【'method','uri','action'=>[]]
      * @var array
      */
     protected $routes = [];
 
     /**
      * All of the named routes and URI pairs.
-     *
+     * 命名路由存这里,下标是命名字符串，值是URI,比如['foo'=>'/foo']
      * @var array
      */
     public $namedRoutes = [];
@@ -58,7 +60,7 @@ class Router
         }
 
         $this->updateGroupStack($attributes);
-
+        //执行匿名函数，读取路由文件
         call_user_func($callback, $this);
 
         array_pop($this->groupStack);
@@ -156,7 +158,7 @@ class Router
 
     /**
      * Add a route to the collection.
-     *
+     * 添加一条路由到集合里，其它诸如get,post,put等方法都是在这注册的
      * @param  array|string  $method
      * @param  string  $uri
      * @param  mixed  $action
@@ -192,6 +194,7 @@ class Router
 
         if (is_array($method)) {
             foreach ($method as $verb) {
+                //已数组形式存储到routes里，注意格式
                 $this->routes[$verb.$uri] = ['method' => $verb, 'uri' => $uri, 'action' => $action];
             }
         } else {

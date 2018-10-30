@@ -869,6 +869,9 @@ class Application extends Container
     }
 
     /**
+     * 类型和注册方法的映射关系，多个类似的类型可以使用相同的注册方法，比如
+     * 'cache' => 'registerCacheBindings',
+     *  'cache.store' => 'registerCacheBindings',
      * The available container bindings and their respective load methods.
      *
      * @var array

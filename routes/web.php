@@ -11,8 +11,6 @@
 */
 
 $router->get('/', function () use ($router) {
-//    var_dump($router);
-//    var_dump($router->app);
     //DB这个facade是通过php内置函数class_alias('Illuminate\Support\Facades\DB','DB',)注册到内存里,
     //其中第一个参数'Illuminate\Support\Facades\DB'是真正的全命名空间的类，第二个参数DB是别名。
     //所以这里并没有写命名空间的话，DB::select('test')就是找的早已注册了别名的'Illuminate\Support\Facades\DB'

@@ -97,6 +97,7 @@ $app->singleton(
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
+    //注册路由，就是通过直接引入web.php实现的，把文件中的get,post,等存储到router对象到几个数组里保存后续使用而已。
     require __DIR__.'/../routes/web.php';
 });
 
