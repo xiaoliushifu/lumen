@@ -1,21 +1,21 @@
-# Lumen PHP Framework
+# Lumen PHP 框架
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+[![构建状态](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
+[![下载量](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
+[![最新稳定版](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
+[![最新非稳定版](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
+[![版权](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+Laravel Lumen 是一个快速构建Web应用的PHP微框架，有着极富表现力和优雅的语法。 说实在地，我认为开发必须是一个乐在其中并富有创造力的体验。 Lumen 通过舒缓我们在项目常见的任务（路由，抽象数据库，队列，缓存等）来减轻我们开发中遇到的痛苦.
 
-## Official Documentation
+## 官方文档
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+框架的文档可以在这里找到 [Lumen website](http://lumen.laravel.com/docs).
 
-## Security Vulnerabilities
+## 安全漏洞
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+如果你在使用lumen过程中发现任何安全漏洞问题 请向 Taylor Otwell 先生的邮箱地址taylor@laravel.com.发邮件，所有安全漏洞都会得到及时处理
 
-## License
+## 版权
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Lumen框架遵守开源协议 [MIT license](http://opensource.org/licenses/MIT)
