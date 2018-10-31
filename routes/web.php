@@ -50,3 +50,12 @@ $router->get('profile', [
     'middleware' => App\Http\Middleware\OldMiddleware::class,
     'uses' => 'ExampleController@show'
 ]);
+
+// 一组路由放到api/v1前缀下，前缀是不完整的路由，是整个路由的一部分，仍需要后续的补充
+$router->group(['prefix' => 'api/v1'], function($app)
+{
+    $app->post('car','CarController@createCar');
+    $app->put('car/{id}','CarController@updateCar');
+    $app->delete('car/{id}','CarController@deleteCar');
+    $app->get('car','CarController@index');
+});
