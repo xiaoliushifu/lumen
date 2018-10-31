@@ -22,6 +22,10 @@ try {
 $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
+//加载自定义的配置文件（文件中的配置项目就加载进来了）
+$app->configure('main');//配置对象在第一次使用时实例化，后续再有其它配置文件加载时就不必再次实例化了
+//配置对象是共享的，单例的，配置文件是随时加载进来的
+$app->configure('main_local');
 
 //注册门面（也就是所谓的组件别名机制）
  $app->withFacades();

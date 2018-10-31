@@ -157,7 +157,7 @@ abstract class Facade
      * Facade可以理解是容器里组件别名的别名。比如
      * DB==>db==>databaseManager
      * 这里DB是facade，它是db的别名
-     * db是容器组件的别名，它是databaseManager的别名
+     * db是容器组件的别名，它是databaseManager组件的别名
      * @param  string|object  $name
      * @return mixed
      */

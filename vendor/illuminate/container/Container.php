@@ -187,7 +187,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Determine if a given type is shared.
-     *
+     * 抽象类型实例化的对象是否共享，其实就是在bind时就确定了，第三个参数shared的值是true
      * @param  string  $abstract
      * @return bool
      */
@@ -611,9 +611,20 @@ class Container implements ArrayAccess, ContainerContract
         throw new EntryNotFoundException;
     }
 
-    /**这是make方法的底层，
+    /**
+     * 这是make方法的底层，
      * Resolve the given type from the container.
-     *
+     * make的过程大概是这样的：
+     *  1抽象类型的别名有么有
+     *  2需要上下文的实体构建？（这个还没研究，暂略）
+     *  3是否已经实例过了，且不需要上下文构建？
+     *  4是否满足构建的条件，不满足就去不足构建条件
+     *  5执行匿名函数构建（通常是这样），或者使用反射实例化对象
+     *  6抽象类型是否有扩展，有则遍历走一遍
+     *  7新实例化的对象是否需要缓存，需要就缓存之，对应第3步
+     *  8触发解析回掉事件（全局，部分等层级）
+     *  9标记该抽象类型已经被解析过
+     *  10返回新解析的对象
      * @param  string  $abstract
      * @param  array  $parameters
      * @return mixed
@@ -657,6 +668,8 @@ class Container implements ArrayAccess, ContainerContract
         // the instances in "memory" so we can return it later without creating an
         // entirely new instance of an object on each subsequent request for it.
         if ($this->isShared($abstract) && ! $needsContextualBuild) {
+            //共享实例，需要在容器的instances属性数组里存一份，将来其它地方再需要这个对象时不必在实例化了
+            //这就是PHP"内存"缓存
             $this->instances[$abstract] = $object;
         }
         //每次解析一个对象的时候，都会触发一个事件
@@ -665,6 +678,7 @@ class Container implements ArrayAccess, ContainerContract
         // Before returning, we will also set the resolved flag to "true" and pop off
         // the parameter overrides for this build. After those two things are done
         // we will be ready to return back the fully constructed class instance.
+        //标记该抽象类型$abstract已被解析过了（已被实例化了）
         $this->resolved[$abstract] = true;
 
         array_pop($this->with);
@@ -761,6 +775,7 @@ class Container implements ArrayAccess, ContainerContract
         // used as resolvers for more fine-tuned resolution of these objects.
         //这句话说明了，laravel使用匿名函数，是为了更精细地（fine-tuned)解析对象，不必走下面反射过程
         if ($concrete instanceof Closure) {
+            //注意，匿名函数的第一个参数，用于是$this,这里就是$app了
             return $concrete($this, $this->getLastParameterOverride());
         }
 
