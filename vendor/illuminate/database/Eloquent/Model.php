@@ -520,7 +520,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * Save the model to the database.
-     *
+     * 保存和更新的统一
      * @param  array  $options
      * @return bool
      */
@@ -1463,7 +1463,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * Handle dynamic method calls into the model.
-     *
+     * 当调用一个不可访问的方法时，才调用该魔术方法
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
@@ -1473,13 +1473,13 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         if (in_array($method, ['increment', 'decrement'])) {
             return $this->$method(...$parameters);
         }
-
+        //除了上述两个方法之外，其它都是查询构造器的方法
         return $this->newQuery()->$method(...$parameters);
     }
 
     /**
      * Handle dynamic static method calls into the method.
-     *
+     * 调用不可访问的静态方法时，会调用它。
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed

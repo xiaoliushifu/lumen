@@ -47,7 +47,7 @@ class Application extends Container
 
     /**
      * The loaded service providers.
-     *
+     * 缓存已经加载的服务提供者
      * @var array
      */
     protected $loadedProviders = [];
@@ -189,13 +189,13 @@ class Application extends Container
         if (array_key_exists($providerName = get_class($provider), $this->loadedProviders)) {
             return;
         }
-
+         //标记该服务提供者已加载
         $this->loadedProviders[$providerName] = true;
-
+        //每个服务提供者必备的方法就是register
         if (method_exists($provider, 'register')) {
             $provider->register();
         }
-
+        //最后还有调用boot方法
         if (method_exists($provider, 'boot')) {
             return $this->call([$provider, 'boot']);
         }
@@ -212,7 +212,8 @@ class Application extends Container
         return $this->register($provider);
     }
 
-    /**好好看看这个方法
+    /**
+     * 好好看看这个方法
      * Resolve the given type from the container.
      *
      * @param  string  $abstract
@@ -577,7 +578,10 @@ class Application extends Container
 
     /**
      * Configure and load the given component and provider.
-     *
+     * 该方法是一个综合性的方法
+     *  1加载database配置文件
+     *  2注册服务提供器
+     *  3返回$app或者$config别名背后的容器对象
      * @param  string  $config
      * @param  array|string  $providers
      * @param  string|null  $return
