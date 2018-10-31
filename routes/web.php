@@ -1,4 +1,6 @@
 <?php
+//由于Config门面没有在默认的加载里，所以我们需要引入这个门面才可以使用
+use Illuminate\Support\Facades\Config;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,18 +13,29 @@
 */
 
 $router->get('/', function () use ($router) {
-    //DB这个facade是通过php内置函数class_alias('Illuminate\Support\Facades\DB','DB',)注册到内存里,
-    //其中第一个参数'Illuminate\Support\Facades\DB'是真正的全命名空间的类，第二个参数DB是别名。
-    //所以这里并没有写命名空间的话，DB::select('test')就是找的早已注册了别名的'Illuminate\Support\Facades\DB'
-    //这就是门面Facade的核心："Facade无需使用命名空间导入，可以在应用任何地方使用"
-    //class_alias还有第三个参数，在类不存在时是否自动加载，默认true开启自动加载
-    //了解了上述Facade的核心后，大家还关心的是，背后真正的功能类到底是哪个，如何确定？稍后再说
 
-    //我们后续再说
-//    DB::select('test');
-    Log::Info('Hello world');
-    //第二次再使用时已经无需去容器里实例化了，它已经在instances数组里了
-    Log::Info('Hello world2');
+
+//    dd(get_class(Config::getFacadeRoot()));
+    //获得当个配置项，注意，配置文件都得是文件名.item,
+    //比如config下有一个main.php文件，里面有一个access_key配置项，那么如下获得该配置即可
+//    echo Config::get('main.access_key');
+
+
+//    Config::set('name.me','我');//点语法将生成数组,$name['me']='我'
+    Config::set(['b','alias']);  //索引数组形式的设置  0=>b, 1=>alias
+    Config::set(['name.a'=>'alias']);//关联数组形式支持点语法  name['a']='alias'
+    Config::set('a.b.c','lumen');//a['b']['c']='lumen'支持多层数组配置
+    Config::prepend('main','word');// 给数组main的头部添加一个元素（索引下标0）
+    Config::push('main','word2');// 给main的尾部添加一个元素（索引下标递增）
+    print_r(Config::get(['0','1']));//数组一次获取多个配置，已数组形式返回
+    //获得所有的配置
+//    dd(Config::all());
+
+
+
+
+    echo Config::get('main.access_key');
+
     return $router->app->version();
 });
 

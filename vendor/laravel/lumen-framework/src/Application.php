@@ -40,7 +40,7 @@ class Application extends Container
 
     /**
      * All of the loaded configuration files.
-     *
+     * 布尔标记量，所有加载过的文件，都会留一个下标
      * @var array
      */
     protected $loadedConfigurations = [];
@@ -313,7 +313,8 @@ class Application extends Container
 
     /**
      * Register container bindings for the application.
-     *
+     * 配置对象config需要临时注册，也就是在第一次需要配置对象的时候才去注册
+     * 然后紧接着build就行。
      * @return void
      */
     protected function registerConfigBindings()
@@ -595,7 +596,7 @@ class Application extends Container
 
     /**
      * Load a configuration file into the application.
-     *
+     * 应用的configure方法，是加载配置项目，是从配置文件里，批量方式地加载，不是单个加载
      * @param  string  $name
      * @return void
      */
@@ -610,15 +611,16 @@ class Application extends Container
         $path = $this->getConfigurationPath($name);
 
         if ($path) {
+            //实例化config对象，并立即以$name文件名为下标的数组形式设置配置项到内存中
             $this->make('config')->set($name, require $path);
         }
     }
 
     /**
      * Get the path to the given configuration file.
-     *
+     * 得到配置文件的路径，配置路径是固定的config/,这个就不要自定义了
      * If no name is provided, then we'll return the path to the config folder.
-     *
+     * 如果不提供具体的name,就简单地返回config目录而已
      * @param  string|null  $name
      * @return string
      */
@@ -633,10 +635,12 @@ class Application extends Container
                 return $path;
             }
         } else {
+            //看见没有，路径是写死的config目录，
             $appConfigPath = $this->basePath('config').'/'.$name.'.php';
-
+            //优先考虑项目根目录
             if (file_exists($appConfigPath)) {
                 return $appConfigPath;
+                //框架目录里的config目录是次选
             } elseif (file_exists($path = __DIR__.'/../config/'.$name.'.php')) {
                 return $path;
             }

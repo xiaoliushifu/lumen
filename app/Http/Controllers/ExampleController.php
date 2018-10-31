@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Middleware\LogMiddleware;
+use Illuminate\Support\Facades\Config;
 
 class ExampleController extends Controller
 {
@@ -22,6 +23,7 @@ class ExampleController extends Controller
     //
     public function show()
     {
+        print_r(Config::all());
         return 'Hello show';
     }
 
