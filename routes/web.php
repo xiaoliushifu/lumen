@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
     //获得当个配置项，注意，配置文件都得是文件名.item,
     //比如config下有一个main.php文件，里面有一个access_key配置项，那么如下获得该配置即可
 //    echo Config::get('main.access_key');
-
+    ding('测试一个钉钉消息-formLumen');
 
 //    Config::set('name.me','我');//点语法将生成数组,$name['me']='我'
     Config::set(['b','alias']);  //索引数组形式的设置  0=>b, 1=>alias

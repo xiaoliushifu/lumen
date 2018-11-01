@@ -152,10 +152,12 @@ trait RoutesRequests
      */
     public function dispatch($request = null)
     {
+        //解析http 请求，返回请求方法和pathInfo
         list($method, $pathInfo) = $this->parseIncomingRequest($request);
 
         try {
             return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
+                //路由是否匹配？
                 if (isset($this->router->getRoutes()[$method.$pathInfo])) {
                     return $this->handleFoundRoute([true, $this->router->getRoutes()[$method.$pathInfo]['action'], []]);
                 }
@@ -403,13 +405,15 @@ trait RoutesRequests
      */
     protected function sendThroughPipeline(array $middleware, Closure $then)
     {
+        //判断有没有中间件需要执行
         if (count($middleware) > 0 && ! $this->shouldSkipMiddleware()) {
+            //带上请求去执行中间件
             return (new Pipeline($this))
                 ->send($this->make('request'))
                 ->through($middleware)
                 ->then($then);
         }
-
+        //没有中间件则直接走$then回调
         return $then();
     }
 
