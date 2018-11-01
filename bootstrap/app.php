@@ -27,6 +27,9 @@ $app->configure('main');//配置对象在第一次使用时实例化，后续再
 //配置对象是共享的，单例的，配置文件是随时加载进来的
 $app->configure('main_local');
 
+//一个服务提供者需要的配置文件
+$app->configure('ding');
+
 //注册门面（也就是所谓的组件别名机制）
  $app->withFacades();
 
@@ -87,6 +90,8 @@ $app->singleton(
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+//注册服务提供者
+ $app->register(DingNotice\DingNoticeServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
