@@ -30,6 +30,10 @@ $app->configure('main_local');
 //一个服务提供者需要的配置文件
 $app->configure('ding');
 
+//邮件的配置文件
+$app->configure('mail');
+
+
 //注册门面（也就是所谓的组件别名机制）
  $app->withFacades();
 
@@ -90,8 +94,11 @@ $app->singleton(
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
-//注册服务提供者
+ //注册钉钉消息服务提供者
  $app->register(DingNotice\DingNoticeServiceProvider::class);
+
+ //注册邮件服务提供者
+ $app->register(Illuminate\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

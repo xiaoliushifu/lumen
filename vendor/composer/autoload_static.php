@@ -12,6 +12,7 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '1d1b89d124cc9cb8219922c9d5569199' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
@@ -30,6 +31,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         array (
             'Webmozart\\Assert\\' => 17,
         ),
+        'T' => 
+        array (
+            'TijsVerkoyen\\CssToInlineStyles\\' => 31,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Php70\\' => 23,
@@ -42,6 +47,7 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
             'Symfony\\Component\\Finder\\' => 25,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\Debug\\' => 24,
+            'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
         ),
         'P' => 
@@ -71,6 +77,7 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
             'Illuminate\\Queue\\' => 17,
             'Illuminate\\Pipeline\\' => 20,
             'Illuminate\\Pagination\\' => 22,
+            'Illuminate\\Mail\\' => 16,
             'Illuminate\\Http\\' => 16,
             'Illuminate\\Hashing\\' => 19,
             'Illuminate\\Filesystem\\' => 22,
@@ -96,6 +103,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         array (
             'FastRoute\\' => 10,
             'Faker\\' => 6,
+        ),
+        'E' => 
+        array (
+            'Egulias\\EmailValidator\\' => 23,
         ),
         'D' => 
         array (
@@ -125,6 +136,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         'Webmozart\\Assert\\' => 
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
+        ),
+        'TijsVerkoyen\\CssToInlineStyles\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tijsverkoyen/css-to-inline-styles/src',
         ),
         'Symfony\\Polyfill\\Php70\\' => 
         array (
@@ -165,6 +180,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         'Symfony\\Component\\Debug\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/debug',
+        ),
+        'Symfony\\Component\\CssSelector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/css-selector',
         ),
         'Symfony\\Component\\Console\\' => 
         array (
@@ -233,6 +252,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         'Illuminate\\Pagination\\' => 
         array (
             0 => __DIR__ . '/..' . '/illuminate/pagination',
+        ),
+        'Illuminate\\Mail\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/mail',
         ),
         'Illuminate\\Http\\' => 
         array (
@@ -310,6 +333,10 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         array (
             0 => __DIR__ . '/..' . '/fzaninotto/faker/src/Faker',
         ),
+        'Egulias\\EmailValidator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/egulias/email-validator/EmailValidator',
+        ),
         'Dotenv\\' => 
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
@@ -351,12 +378,23 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
             array (
                 0 => __DIR__ . '/..' . '/phpspec/prophecy/src',
             ),
+            'Parsedown' => 
+            array (
+                0 => __DIR__ . '/..' . '/erusev/parsedown',
+            ),
         ),
         'M' => 
         array (
             'Mockery' => 
             array (
                 0 => __DIR__ . '/..' . '/mockery/mockery/library',
+            ),
+        ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Lexer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
             ),
         ),
     );
