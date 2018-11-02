@@ -72,13 +72,17 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//    App\Http\Middleware\OldMiddleware::class
-// ]);
+ $app->middleware([
+//    App\Http\Middleware\OldMiddleware::class, 
+     App\Http\Middleware\BeforeMiddleware::class,
+ ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+//注册路由中间件，注册后在路由里使用middleware引用即可
+ $app->routeMiddleware([
+     'auth' => App\Http\Middleware\Authenticate::class,
+     'before' => App\Http\Middleware\BeforeMiddleware::class,
+     'after' => App\Http\Middleware\AfterMiddleware::class,
+ ]);
 
 /*
 |--------------------------------------------------------------------------

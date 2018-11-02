@@ -26,7 +26,9 @@ trait RoutesRequests
 {
     /**
      * All of the global middleware for the application.
-     *
+     * 注册到这里的中间件，都是全局中间件
+     * 注意，中间件本身来说没有全局，或者局部或者路由中间件的区别
+     * 主要看注册到哪里，同一个中间件即可以注册到全局，也可以注册为路由中间件。
      * @var array
      */
     protected $middleware = [];

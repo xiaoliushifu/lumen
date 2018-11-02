@@ -83,8 +83,8 @@ $router->group(['prefix' => 'api/v1','domain'=>'n.lumen.me'], function($router)
     });
 
 
-    //Car控制器使用的路由
-    $router->group(['prefix' => 'car'], function($router)
+    //Car控制器使用的路由,这里使用了先前已经注册好了的路由中间件before
+    $router->group(['prefix' => 'car','middleware'=>'before'], function($router)
     {
         $router->post('/','CarController@createCar');
         $router->put('{id}','CarController@updateCar');
