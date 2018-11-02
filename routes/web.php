@@ -51,11 +51,31 @@ $router->get('profile', [
     'uses' => 'ExampleController@show'
 ]);
 
-// 一组路由放到api/v1前缀下，前缀是不完整的路由，是整个路由的一部分，仍需要后续的补充
-$router->group(['prefix' => 'api/v1'], function($app)
+
+//域名+前缀
+$router->group(['prefix' => 'api/v1','domain'=>'n.lumen.me'], function($router)
 {
-    $app->post('car','CarController@createCar');
-    $app->put('car/{id}','CarController@updateCar');
-    $app->delete('car/{id}','CarController@deleteCar');
-    $app->get('car','CarController@index');
+    //一个控制器，一个路由组就行
+    $router->group(['prefix' => 'test'], function($router)
+    {
+        $router->post('list','TestController@getList');
+        $router->post('detail','TestController@getDetail');
+    });
+
+
+    //Car控制器使用的路由
+    $router->group(['prefix' => 'car'], function($router)
+    {
+        $router->post('/','CarController@createCar');
+        $router->put('{id}','CarController@updateCar');
+        $router->delete('{id}','CarController@deleteCar');
+        $router->get('/','CarController@index');
+    });
+
+//    Route::controller('test','TestController');隐式路由不在lumen中
+    //任意路由
+//    $router->post('{path:.*}', function (\Illuminate\Http\Request $request) {
+//        return $request->getPathInfo();
+//    });
+
 });
