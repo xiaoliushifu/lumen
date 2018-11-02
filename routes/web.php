@@ -1,6 +1,7 @@
 <?php
 //由于Config门面没有在默认的加载里，所以我们需要引入这个门面才可以使用
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Mail;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -31,16 +32,35 @@ $router->get('/', function () use ($router) {
     //获得所有的配置
 //    dd(Config::all());
 
-
-
-
     echo Config::get('main.access_key');
 
     return $router->app->version();
 });
 
 $router->get('foo',['as'=>'foo', function () {
-    Log::Info('Hello world');
+
+    $text = 'nihao啊 这个邮件来自<h3>Lumen</h3>!';
+    //直接纯文本字符发送邮件
+//    Mail::raw($text, function($message)
+//    {
+////        $message->to('chenxiaolong@xiyun.com.cn');
+//        $message->to('872140945@qq.com');
+//    });
+
+    //发送一个text,所谓text就是用一个模版给出的纯文本
+//    Mail::plain('mailView',['name'=>'龙师傅'], function($message)
+//    {
+////        $message->to('chenxiaolong@xiyun.com.cn');
+//        return $message->to('872140945@qq.com');
+//    });
+
+     //发送一个用模版给出的支持html的邮件
+    Mail::send(['html'=>'mailView'],['name'=>'龙师傅'], function($message)
+    {
+        $message->to('chenxiaolong@xiyun.com.cn');
+//        return $message->to('872140945@qq.com');
+    });
+
     return 'Hello World';
 }]);
 
