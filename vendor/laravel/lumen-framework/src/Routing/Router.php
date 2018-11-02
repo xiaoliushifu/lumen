@@ -15,7 +15,19 @@ class Router
 
     /**
      * The route group attribute stack.
-     *
+     * 路由组的属性栈，这些有namespace,prefix,middleware,domain等
+     * 存储格式是：
+     * groupStack = {array} [3]
+        0 = {array} [1]
+            namespace = "App\Http\Controllers"
+        1 = {array} [3]
+            prefix = "/api/v1"
+            domain = "n.lumen.me"
+            namespace = "App\Http\Controllers"
+        2 = {array} [3]
+            domain = "n.lumen.me"
+            prefix = "api/v1/car"
+            namespace = "App\Http\Controllers"
      * @var array
      */
     protected $groupStack = [];
@@ -23,15 +35,39 @@ class Router
     /**
      * All of the routes waiting to be registered.
      * 所有注册的路由，都将存到这里，注意格式
+     *
      * key  GET/profile
-     * value是一个三元素的数组【'method','uri','action'=>[]]
+     * value是一个固定有三个元素的数组【'method','uri','action'=>[]]，其中action又是一个数组，存储'namespace','uses'这些
+     * 下面看看最终的列表，9个路由
+     * routes = {array} [9]
+        GET/ = {array} [3]
+            method = "GET"
+            uri = "/"
+            action = {array} [1]
+                0 = {Closure} [1]
+        GET/foo = {array} [3]
+        GET/profile = {array} [3]
+            method = "GET"
+            uri = "/profile"
+            action = {array} [2]
+                middleware = {array} [1]
+                    0 = "App\Http\Middleware\OldMiddleware"
+                uses = "App\Http\Controllers\ExampleController@show"
+        POST/api/v1/test/list = {array} [3]
+            method = "POST"
+            uri = "/api/v1/test/list"
+            action = {array} [1]
+                uses = "App\Http\Controllers\TestController@getList"
+        POST/api/v1/test/detail = {array} [3]
      * @var array
      */
     protected $routes = [];
 
     /**
      * All of the named routes and URI pairs.
-     * 命名路由存这里,下标是命名字符串，值是URI,比如['foo'=>'/foo']
+     * 命名路由存这里,都是固定的关联数组，
+     * 下标是命名字符串，值是URI,比如
+     *      ['foo'=>'/foo']
      * @var array
      */
     public $namedRoutes = [];
@@ -93,7 +129,7 @@ class Router
         $new['namespace'] = static::formatUsesPrefix($new, $old);
 
         $new['prefix'] = static::formatGroupPrefix($new, $old);
-
+        //域名domain是直接覆盖的，后者优先级高
         if (isset($new['domain'])) {
             unset($old['domain']);
         }
@@ -101,7 +137,7 @@ class Router
         if (isset($old['as'])) {
             $new['as'] = $old['as'].(isset($new['as']) ? '.'.$new['as'] : '');
         }
-
+        //后缀是最外层的有效
         if (isset($old['suffix']) && ! isset($new['suffix'])) {
             $new['suffix'] = $old['suffix'];
         }
@@ -140,7 +176,7 @@ class Router
 
     /**
      * Format the prefix for the new group attributes.
-     *
+     * 前缀格式化，就是最外层的在前，里层的在后进行拼接
      * @param  array  $new
      * @param  array  $old
      * @return string|null
@@ -211,8 +247,10 @@ class Router
     protected function parseAction($action)
     {
         if (is_string($action)) {
+            //字符串增加uses
             return ['uses' => $action];
         } elseif (! is_array($action)) {
+            //非字符串，非数组，一般是匿名函数
             return [$action];
         }
 
@@ -245,7 +283,7 @@ class Router
         $namespace = isset($attributes['namespace']) ? $attributes['namespace'] : null;
         $middleware = isset($attributes['middleware']) ? $attributes['middleware'] : null;
         $as = isset($attributes['as']) ? $attributes['as'] : null;
-
+        //这个方法好复杂呀，三个函数的嵌套！
         return $this->mergeNamespaceGroup(
             $this->mergeMiddlewareGroup(
                 $this->mergeAsGroup($action, $as),
@@ -396,7 +434,7 @@ class Router
 
     /**
      * Get the raw routes for the application.
-     *
+     * 获得原始的路由数组，注意存储的格式
      * @return array
      */
     public function getRoutes()
