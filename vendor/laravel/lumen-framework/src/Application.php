@@ -472,7 +472,8 @@ class Application extends Container
         if (! $request instanceof Request) {
             $request = Request::createFromBase($request);
         }
-
+        //链式地调用了两个方法，真少见
+        //各自设置了一个回调函数
         $request->setUserResolver(function ($guard = null) {
             return $this->make('auth')->guard($guard)->user();
         })->setRouteResolver(function () {

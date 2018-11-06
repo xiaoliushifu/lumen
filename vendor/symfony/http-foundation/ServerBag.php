@@ -12,6 +12,7 @@
 namespace Symfony\Component\HttpFoundation;
 
 /**
+ * ServerBag也是ParameterBag的子类，只有一个getHeaders()方法
  * ServerBag is a container for HTTP headers from the $_SERVER variable.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -22,7 +23,7 @@ class ServerBag extends ParameterBag
 {
     /**
      * Gets the HTTP headers.
-     *
+     * 用时再看吧，反正有几块内容吧
      * @return array
      */
     public function getHeaders()
@@ -30,10 +31,12 @@ class ServerBag extends ParameterBag
         $headers = array();
         $contentHeaders = array('CONTENT_LENGTH' => true, 'CONTENT_MD5' => true, 'CONTENT_TYPE' => true);
         foreach ($this->parameters as $key => $value) {
+            //http的header,在PHP的$_SERVER里绝大部分都是"HTTP_"开头的
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
             }
             // CONTENT_* are not prefixed with HTTP_
+            // 还有一部分是"CONTENT_"开头的
             elseif (isset($contentHeaders[$key])) {
                 $headers[$key] = $value;
             }

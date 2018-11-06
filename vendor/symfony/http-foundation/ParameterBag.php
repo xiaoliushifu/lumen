@@ -11,7 +11,8 @@
 
 namespace Symfony\Component\HttpFoundation;
 
-/**
+/**这只是一个容器对象，键值对。确切地说，这个对象就有一个关联数组作为属性
+ * 但是因为它被包裹为对象，所以可以有很多种方法可以操作，增加便捷性
  * ParameterBag is a container for key/value pairs.
  *
  * @author Fabien Potencier <fabien@symfony.com>

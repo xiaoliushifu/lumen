@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
+ * Request代表一个http请求
  * Request represents an HTTP request.
  *
  * The methods dealing with URL accept / return a raw path (% encoded):
@@ -96,28 +97,28 @@ class Request
 
     /**
      * Custom parameters.
-     *
+     * PATH_INFO包裹的对象
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $attributes;
 
     /**
      * Request body parameters ($_POST).
-     *
+     * $_POST数组包裹的对象
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $request;
 
     /**
      * Query string parameters ($_GET).
-     *
+     * 标示$_GET数组包裹的对象
      * @var \Symfony\Component\HttpFoundation\ParameterBag
      */
     public $query;
 
     /**
      * Server and execution environment parameters ($_SERVER).
-     *
+     * $_SERVER包裹的对象
      * @var \Symfony\Component\HttpFoundation\ServerBag
      */
     public $server;
@@ -242,6 +243,7 @@ class Request
     );
 
     /**
+     * 好好看看这几个变量的解释，attributes是PATH_INFO,$content是原始body，这个有意思啊
      * @param array                $query      The GET parameters
      * @param array                $request    The POST parameters
      * @param array                $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
@@ -257,7 +259,7 @@ class Request
 
     /**
      * Sets the parameters for this request.
-     *
+     * 这个方法够你好好看看的了，ParameterBag,FileBag,ServerBag,HeaderBag四种对象
      * This method also re-initializes all properties.
      *
      * @param array                $query      The GET parameters
@@ -270,12 +272,16 @@ class Request
      */
     public function initialize(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
+        //$_POST参数
         $this->request = new ParameterBag($request);
+        //$_GET参数
         $this->query = new ParameterBag($query);
+        //初始化永远为空
         $this->attributes = new ParameterBag($attributes);
         $this->cookies = new ParameterBag($cookies);
         $this->files = new FileBag($files);
         $this->server = new ServerBag($server);
+         //用server的getHeaders()方法
         $this->headers = new HeaderBag($this->server->getHeaders());
 
         $this->content = $content;
@@ -293,12 +299,12 @@ class Request
 
     /**
      * Creates a new request with values from PHP's super globals.
-     *
+     * 根据PHP的几个超全局变量创建新的request对象
      * @return static
      */
     public static function createFromGlobals()
     {
-        // With the php's bug #66606, the php's built-in web server
+        // With the php's bug #66606, the php's built-in web server  这算一个bug吗？难道不是php内部的特性？
         // stores the Content-Type and Content-Length header values in
         // HTTP_CONTENT_TYPE and HTTP_CONTENT_LENGTH fields.
         $server = $_SERVER;
@@ -310,10 +316,11 @@ class Request
                 $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
             }
         }
-
+        //五个超全局对象，都将作为$request对象的子对象
         $request = self::createRequestFromFactory($_GET, $_POST, array(), $_COOKIE, $_FILES, $server);
 
         if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
+            //这种情况是咋回事？
             && \in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
         ) {
             parse_str($request->getContent(), $data);
@@ -447,7 +454,7 @@ class Request
 
     /**
      * Clones a request and overrides some of its parameters.
-     *
+     * 克隆一个request对象，然后覆盖一些参数
      * @param array $query      The GET parameters
      * @param array $request    The POST parameters
      * @param array $attributes The request attributes (parameters parsed from the PATH_INFO, ...)
@@ -459,6 +466,7 @@ class Request
      */
     public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)
     {
+        //基于Symfony克隆新的request,这里要提到的是它的属性query,request,cookies都是对象，所以也需要在__clone魔术方法里依次克隆
         $dup = clone $this;
         if (null !== $query) {
             $dup->query = new ParameterBag($query);
@@ -489,11 +497,11 @@ class Request
         $dup->basePath = null;
         $dup->method = null;
         $dup->format = null;
-
-        if (!$dup->get('_format') && $this->get('_format')) {
+        //_format参数
+        if (!$dup->get('_format') && $this->get('_format')) {//这有可能发生吗？$dup没有_format但是$this有？
             $dup->attributes->set('_format', $this->get('_format'));
         }
-
+        //format属性
         if (!$dup->getRequestFormat(null)) {
             $dup->setRequestFormat($this->getRequestFormat(null));
         }
@@ -503,7 +511,10 @@ class Request
 
     /**
      * Clones the current request.
-     *
+     * 该魔术方法是为了初始化新克隆对象的属性（非必要）
+     * 这里明显是因为源对象SymfonyRequest对象里query,request,cookies,server这些属性其实都是子对象（php对象都是引用的。
+     * 所以如果仅仅克隆SymfonyRequest对象的话，这样新克隆的对象何源对象都会引用重复的query,request,cookies,server子对象
+     * 所以这里有必要把子对象也克隆一遍！
      * Note that the session is not cloned as duplicated requests
      * are most of the time sub-requests of the main one.
      */
@@ -774,7 +785,7 @@ class Request
 
     /**
      * Enables support for the _method request parameter to determine the intended HTTP method.
-     *
+     * 开启_method参数代替除get,post之外的http方法如PUT,DELETE的功能
      * Be warned that enabling this feature might lead to CSRF issues in your code.
      * Check that you are using CSRF tokens when required.
      * If the HTTP method parameter override is enabled, an html-form with method "POST" can be altered
@@ -800,11 +811,11 @@ class Request
 
     /**
      * Gets a "parameter" value from any bag.
-     *
+     * 获得一个参数，从PATH——INFO,$_GET,$_POST，
      * This method is mainly useful for libraries that want to provide some flexibility. If you don't need the
      * flexibility in controllers, it is better to explicitly get request parameters from the appropriate
      * public property instead (attributes, query, request).
-     *
+     * 注意优先级，PATH,GET,POST
      * Order of precedence: PATH (routing placeholders or custom attributes), GET, BODY
      *
      * @param string $key     The key
@@ -938,14 +949,15 @@ class Request
      * Returns the path being requested relative to the executed script.
      *
      * The path info always starts with a /.
-     *
+     * 假设（比如）请求实例始于lsocalhost/mysite，
      * Suppose this request is instantiated from /mysite on localhost:
      *
      *  * http://localhost/mysite              returns an empty string
      *  * http://localhost/mysite/about        returns '/about'
      *  * http://localhost/mysite/enco%20ded   returns '/enco%20ded'
      *  * http://localhost/mysite/about?var=1  returns '/about'
-     *
+     * 一般是域名之后的都是，比如
+     * http://n.lumen.me/api/v1/test/list,那么它的pathInfo就是/api/v1/test/list（注意最左边有/）
      * @return string The raw path (i.e. not urldecoded)
      */
     public function getPathInfo()
@@ -1227,7 +1239,7 @@ class Request
 
     /**
      * Checks whether the request is secure or not.
-     *
+     * 检测是否是https,如果是代理还可以从X-Forwarded-Proto"这个内置的header读取来判断
      * This method can read the client protocol from the "X-Forwarded-Proto" header
      * when trusted proxies were set via "setTrustedProxies()".
      *
@@ -1331,10 +1343,10 @@ class Request
 
     /**
      * Gets the request "intended" method.
-     *
+     * 在POST方法情况下，第一步先判断是否有指定的http请求字段
      * If the X-HTTP-Method-Override header is set, and if the method is a POST,
      * then it is used to determine the "real" intended HTTP method.
-     *
+     * 第二步判断是否有_method参数（这个是为了解决网页表单只能写get,post。给出模拟put,head,patch的方案）
      * The _method request parameter can also be used to determine the HTTP method,
      * but only if enableHttpMethodParameterOverride() has been called.
      *
@@ -1350,9 +1362,11 @@ class Request
             $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
 
             if ('POST' === $this->method) {
+                //是否有特殊的请求header字段
                 if ($method = $this->headers->get('X-HTTP-METHOD-OVERRIDE')) {
                     $this->method = strtoupper($method);
                 } elseif (self::$httpMethodParameterOverride) {
+                    //或者是否有_method方式标示的模拟（PUT,PATCH这些方法）
                     $method = $this->request->get('_method', $this->query->get('_method', 'POST'));
                     if (\is_string($method)) {
                         $this->method = strtoupper($method);
@@ -1366,7 +1380,7 @@ class Request
 
     /**
      * Gets the "real" request method.
-     *
+     * 其实就是从$_SERVER里的REQUEST_METHOD字段判断
      * @return string The request method
      *
      * @see getMethod()
@@ -1453,7 +1467,7 @@ class Request
 
     /**
      * Gets the request format.
-     *
+     * _format这个参数很重要，暂略
      * Here is the process to determine the format:
      *
      *  * format defined by the user (with setRequestFormat())
@@ -1475,7 +1489,7 @@ class Request
 
     /**
      * Sets the request format.
-     *
+     * 这个format有待后续场景再说
      * @param string $format The request format
      */
     public function setRequestFormat($format)
@@ -1817,7 +1831,7 @@ class Request
         return 'XMLHttpRequest' == $this->headers->get('X-Requested-With');
     }
 
-    /*
+    /*下面的方法参考Zend Framework，还有版权？
      * The following methods are derived from code of the Zend Framework (1.10dev - 2010-01-24)
      *
      * Code subject to the new BSD license (http://framework.zend.com/license/new-bsd).
@@ -1835,6 +1849,7 @@ class Request
             $this->server->remove('UNENCODED_URL');
             $this->server->remove('IIS_WasUrlRewritten');
         } elseif ($this->server->has('REQUEST_URI')) {
+            //还是通过$_SERVER的REQUEST_URI字段
             $requestUri = $this->server->get('REQUEST_URI');
             // HTTP proxy reqs setup request URI with scheme and host [and port] + the URL path, only use URL path
             $schemeAndHttpHost = $this->getSchemeAndHttpHost();
@@ -1851,6 +1866,7 @@ class Request
         }
 
         // normalize the request URI to ease creating sub-requests from this request
+        //解析完之后，都同意覆盖调server的REQUEST_URI
         $this->server->set('REQUEST_URI', $requestUri);
 
         return $requestUri;
@@ -1858,7 +1874,7 @@ class Request
 
     /**
      * Prepares the base URL.
-     *
+     * 一般是"",具体再说
      * @return string
      */
     protected function prepareBaseUrl()
@@ -1962,14 +1978,16 @@ class Request
             return '/';
         }
 
-        // Remove the query string from REQUEST_URI
+        // Remove the query string from REQUEST_URI，
+        //排除问号?之后的部分
         if (false !== $pos = strpos($requestUri, '?')) {
             $requestUri = substr($requestUri, 0, $pos);
         }
+        //左边必须加上"/"
         if ('' !== $requestUri && '/' !== $requestUri[0]) {
             $requestUri = '/'.$requestUri;
         }
-
+        //baseUrl的概念暂略
         if (null === ($baseUrl = $this->getBaseUrl())) {
             return $requestUri;
         }
@@ -2044,7 +2062,7 @@ class Request
 
         return false;
     }
-
+    //开始创建http请求对象（基础就是根据PHP的几个超全局数组）
     private static function createRequestFromFactory(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
         if (self::$requestFactory) {

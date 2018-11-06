@@ -26,7 +26,7 @@ trait InteractsWithContentTypes
 
     /**
      * Determine if the request is sending JSON.
-     *
+     * 判断请求是否发送的json数据，判断依据就是header的content_type字段是不是含有/json,+json字样
      * @return bool
      */
     public function isJson()

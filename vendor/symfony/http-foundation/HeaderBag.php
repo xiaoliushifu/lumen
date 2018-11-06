@@ -13,11 +13,13 @@ namespace Symfony\Component\HttpFoundation;
 
 /**
  * HeaderBag is a container for HTTP headers.
- *
+ * 这个没有继承ParameterBag，是一个单独的对象哦
+ * 但是，它是机遇ServerBag间接获得头部才创建的。
  * @author Fabien Potencier <fabien@symfony.com>
  */
 class HeaderBag implements \IteratorAggregate, \Countable
 {
+    //保存的headers也是关联数组，但是数组元素又是数组，也就是说它是二维数组
     protected $headers = array();
     protected $cacheControl = array();
 
@@ -109,6 +111,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function get($key, $default = null, $first = true)
     {
+        //下划线改为连字符
         $key = str_replace('_', '-', strtolower($key));
         $headers = $this->all();
 
