@@ -154,10 +154,11 @@ trait RoutesRequests
      */
     public function dispatch($request = null)
     {
-        //解析http 请求，返回请求方法和pathInfo
+        //解析http 请求，返回请求方法和pathInfo，其中包含了实例化lumen的请求对象和Symfony的请求对象
         list($method, $pathInfo) = $this->parseIncomingRequest($request);
 
         try {
+            //先走全局中间件
             return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
                 //路由是否匹配？
                 if (isset($this->router->getRoutes()[$method.$pathInfo])) {
@@ -184,11 +185,12 @@ trait RoutesRequests
     protected function parseIncomingRequest($request)
     {
         if (! $request) {
+            //实例了两回，一个是父类Symfony的request,然后基于这个Symfony再实例化lumen的request,不知是何用意，难道就为了方便初始化lumen的request？
             $request = Request::capture();
         }
-
+        //lumen的请求对象放到容器里，key就是illuminate\http\request
         $this->instance(Request::class, $this->prepareRequest($request));
-
+        //这才去解析uri,返回格式是一个数组，第一个是http请求参数，第一个是PATH_INFO
         return [$request->getMethod(), '/'.trim($request->getPathInfo(), '/')];
     }
 
@@ -407,7 +409,7 @@ trait RoutesRequests
      */
     protected function sendThroughPipeline(array $middleware, Closure $then)
     {
-        //判断有没有中间件需要执行
+        //有全局中间件，且中间件没有被禁用
         if (count($middleware) > 0 && ! $this->shouldSkipMiddleware()) {
             //带上请求去执行中间件
             return (new Pipeline($this))
@@ -444,7 +446,7 @@ trait RoutesRequests
 
     /**
      * Determines whether middleware should be skipped during request.
-     *
+     * 这里还能跳过中间件的后门吗？
      * @return bool
      */
     protected function shouldSkipMiddleware()

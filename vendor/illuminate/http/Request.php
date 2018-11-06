@@ -49,7 +49,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     /**
      * Create a new Illuminate HTTP request from server variables.
-     *
+     * 根据$_SERVER创建http请求对象
      * @return static
      */
     public static function capture()
@@ -345,7 +345,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
 
     /**
      * Create an Illuminate request from a Symfony instance.
-     *
+     * 首先是创建SysfonyRequest对象，基于此对象再创建lumen的request，为啥这样呢？暂略
      * @param  \Symfony\Component\HttpFoundation\Request  $request
      * @return \Illuminate\Http\Request
      */
@@ -354,26 +354,26 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         if ($request instanceof static) {
             return $request;
         }
-
+        //把content临时保存下
         $content = $request->content;
-
+        //直接实例化自己，static关键字，然后直接调用duplicate方法初始化。但是参数都是父类对象SymfonyRequest的5个参数
         $request = (new static)->duplicate(
-            $request->query->all(),
-            $request->request->all(),
+            $request->query->all(),//$_GET
+            $request->request->all(),//$_POST
             $request->attributes->all(),
             $request->cookies->all(),
             $request->files->all(),
             $request->server->all()
         );
-
+        //放到lumen的request里
         $request->content = $content;
-
+        //单独调整下request对象（如果是GET,HEAD请求则request属性重置为$_GET，其它则还是request）
         $request->request = $request->getInputSource();
 
         return $request;
     }
 
-    /**
+    /**lumen的request对象初始化不是通过构造方法，而是通过duplicate方法，有何深意？
      * {@inheritdoc}
      */
     public function duplicate(array $query = null, array $request = null, array $attributes = null, array $cookies = null, array $files = null, array $server = null)

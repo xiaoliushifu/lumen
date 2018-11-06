@@ -13,7 +13,8 @@ namespace Symfony\Component\HttpFoundation;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-/**
+/**FileBag对象就是一个只针对上传文件封装的php对象，它是ParameterBag的子对象而已
+ * 这样就不是一个纯数组，包裹成对象操作非常方便
  * FileBag is a container for uploaded files.
  *
  * @author Fabien Potencier <fabien@symfony.com>
