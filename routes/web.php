@@ -79,6 +79,7 @@ $router->group(['prefix' => 'api/v1','domain'=>'n.lumen.me'], function($router)
     $router->group(['prefix' => 'test'], function($router)
     {
         $router->post('list','TestController@getList');
+        $router->get('test','TestController@getTest');
         $router->post('detail','TestController@getDetail');
     });
 

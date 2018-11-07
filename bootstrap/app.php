@@ -95,7 +95,11 @@ $app->singleton(
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+/*
+ * 在这里完成自定义服务提供者SmsServiceProvider的注册
+ * 
+*/
+ $app->register(App\Providers\SmsServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
  //注册钉钉消息服务提供者
