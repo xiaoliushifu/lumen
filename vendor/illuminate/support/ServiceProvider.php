@@ -8,14 +8,14 @@ abstract class ServiceProvider
 {
     /**
      * The application instance.
-     *
+     * 每个服务提供者都保留一个对应用的链接
      * @var \Illuminate\Contracts\Foundation\Application
      */
     protected $app;
 
     /**
      * Indicates if loading of the provider is deferred.
-     *
+     * 是否延迟加载这个服务提供者
      * @var bool
      */
     protected $defer = false;

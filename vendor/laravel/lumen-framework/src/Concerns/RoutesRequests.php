@@ -154,7 +154,7 @@ trait RoutesRequests
      */
     public function dispatch($request = null)
     {
-        //解析http 请求，返回请求方法和pathInfo，其中包含了实例化lumen的请求对象和Symfony的请求对象
+        //解析http 请求，返回请求方法和pathInfo，其中包含了实例化lumen的请求对象和Symfony的请求对象的过程
         list($method, $pathInfo) = $this->parseIncomingRequest($request);
 
         try {
@@ -162,6 +162,7 @@ trait RoutesRequests
             return $this->sendThroughPipeline($this->middleware, function () use ($method, $pathInfo) {
                 //路由是否匹配？
                 if (isset($this->router->getRoutes()[$method.$pathInfo])) {
+                    //传递一个数组，第一个元素是true；第二个元素是action（一般就是App\Http\Controllers\TestController@getList）,第三个元素是空数组。
                     return $this->handleFoundRoute([true, $this->router->getRoutes()[$method.$pathInfo]['action'], []]);
                 }
 
@@ -178,7 +179,7 @@ trait RoutesRequests
 
     /**
      * Parse the incoming request and return the method and path info.
-     *
+     * 所谓解析请求，就是实例化请求实例的过程（根据五个超全局数组）
      * @param  \Symfony\Component\HttpFoundation\Request|null  $request
      * @return array
      */
@@ -239,8 +240,8 @@ trait RoutesRequests
 
     /**
      * Handle a route found by the dispatcher.
-     *
-     * @param  array  $routeInfo
+     * 处理找到的路由对应的action.
+     * @param  array  $routeInfo 数组。第一个参数，第二个参数
      * @return mixed
      */
     protected function handleFoundRoute($routeInfo)
@@ -402,7 +403,7 @@ trait RoutesRequests
 
     /**
      * Send the request through the pipeline with the given callback.
-     *
+     * 把请求发送到pipeline，去pipeline里走一遭
      * @param  array  $middleware
      * @param  \Closure  $then
      * @return mixed
@@ -411,11 +412,12 @@ trait RoutesRequests
     {
         //有全局中间件，且中间件没有被禁用
         if (count($middleware) > 0 && ! $this->shouldSkipMiddleware()) {
-            //带上请求去执行中间件
+            //$this这里是lumen应用。
             return (new Pipeline($this))
+                //上一步解析请求的时候，已经把request对象放到了容器instances数组里了
                 ->send($this->make('request'))
                 ->through($middleware)
-                ->then($then);
+                ->then($then);//then方法就开始走中间件了
         }
         //没有中间件则直接走$then回调
         return $then();

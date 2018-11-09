@@ -1,5 +1,10 @@
 <?php
 
+/**
+ *Pipeline 管道。渠道，传递途径。
+ * 注意理解这个逻辑名次和真正要处理的对象对应上就行
+ * 谁是管道？谁是传递的对象？
+ */
 namespace Illuminate\Pipeline;
 
 use Closure;
@@ -18,7 +23,7 @@ class Pipeline implements PipelineContract
 
     /**
      * The object being passed through the pipeline.
-     *
+     * 被管道pipeline传递的对象，一般是request对象
      * @var mixed
      */
     protected $passable;
@@ -32,14 +37,14 @@ class Pipeline implements PipelineContract
 
     /**
      * The method to call on each pipe.
-     *
+     * 每个管子里要调用的方法，其实这就是为啥中间件都有一个handle方法
      * @var string
      */
     protected $method = 'handle';
 
     /**
      * Create a new class instance.
-     *
+     * 保存应用对象 laravel\lumen\Application的引用
      * @param  \Illuminate\Contracts\Container\Container|null  $container
      * @return void
      */
@@ -50,7 +55,7 @@ class Pipeline implements PipelineContract
 
     /**
      * Set the object being sent through the pipeline.
-     *
+     * 设置被传递的对象，passable的意思就是：可传递的，这里就是illuminate\Http\Request对象
      * @param  mixed  $passable
      * @return $this
      */
@@ -63,7 +68,7 @@ class Pipeline implements PipelineContract
 
     /**
      * Set the array of pipes.
-     *
+     * 设置层层管道，层层关卡。这里一般就是中间件了，全局中间件数组
      * @param  array|mixed  $pipes
      * @return $this
      */
@@ -76,7 +81,7 @@ class Pipeline implements PipelineContract
 
     /**
      * Set the method to call on the pipes.
-     *
+     * 设置一个方法，该方法在每个pipes上调用
      * @param  string  $method
      * @return $this
      */
@@ -89,7 +94,9 @@ class Pipeline implements PipelineContract
 
     /**
      * Run the pipeline with a final destination callback.
-     *
+     * 依次执行pipeline的匿名函数
+     * 倒序 array_reverse
+     * $this->carry(),迭代的函数
      * @param  \Closure  $destination
      * @return mixed
      */
@@ -117,7 +124,7 @@ class Pipeline implements PipelineContract
 
     /**
      * Get a Closure that represents a slice of the application onion.
-     *
+     * 两个参数的闭包（两个参数的函数）
      * @return \Closure
      */
     protected function carry()

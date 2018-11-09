@@ -1100,7 +1100,7 @@ class Container implements ArrayAccess, ContainerContract
         if ($this->aliases[$abstract] === $abstract) {
             throw new LogicException("[{$abstract}] is aliased to itself.");
         }
-
+        //支持嵌套（别名再别名）
         return $this->getAlias($this->aliases[$abstract]);
     }
 
