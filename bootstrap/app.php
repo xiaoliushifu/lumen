@@ -35,7 +35,12 @@ $app->configure('mail');
 
 
 //注册门面（也就是所谓的组件别名机制）
- $app->withFacades();
+// $app->withFacades();
+//下面这一行，第二个数组是自定义的门面机制
+$app->withFacades(true, [
+    'Tymon\JWTAuth\Facades\JWTAuth' => 'JWTAuth',
+    'Tymon\JWTAuth\Facades\JWTFactory' => 'JWTFactory',
+]);
 
 //需要操作数据库了，使用Model要去注册相关库
  $app->withEloquent();
@@ -73,16 +78,16 @@ $app->singleton(
 */
 
  $app->middleware([
-    App\Http\Middleware\OldMiddleware::class, 
+//    App\Http\Middleware\OldMiddleware::class,
 //     App\Http\Middleware\BeforeMiddleware::class,
  ]);
 
 //注册路由中间件，注册后在路由里使用middleware引用即可
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
+ $app->routeMiddleware([
+     'auth' => App\Http\Middleware\Authenticate::class,
 //     'before' => App\Http\Middleware\BeforeMiddleware::class,
 //     'after' => App\Http\Middleware\AfterMiddleware::class,
-// ]);
+ ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -100,13 +105,14 @@ $app->singleton(
  * 
 */
  $app->register(App\Providers\SmsServiceProvider::class);
+$app->register(\Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
  //注册钉钉消息服务提供者
- $app->register(DingNotice\DingNoticeServiceProvider::class);
+// $app->register(DingNotice\DingNoticeServiceProvider::class);
 
  //注册邮件服务提供者
- $app->register(Illuminate\Mail\MailServiceProvider::class);
+// $app->register(Illuminate\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
