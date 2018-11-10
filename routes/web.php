@@ -100,3 +100,15 @@ $router->group(['prefix' => 'api/v1','domain'=>'n.lumen.me'], function($router)
 //    });
 
 });
+
+/**
+ * 专门为jwt添加的路由
+ */
+Route::group(['prefix' => 'auth'], function ($router) {
+
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+
+});
