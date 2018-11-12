@@ -23,7 +23,8 @@ class ExampleController extends Controller
     //
     public function show()
     {
-        print_r(Config::all());
+//        echo HOMEDOMAIN;
+        h_console_log('大哥日志');
         return 'Hello show';
     }
 

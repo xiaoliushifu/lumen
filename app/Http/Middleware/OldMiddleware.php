@@ -21,8 +21,7 @@ class OldMiddleware
      */
     public function handle($request, Closure $next)
     {
-        Log::info('hello world');
-        Log::info($next,['next']);
+        \Log::info('hello world');
 //        var_dump($request);
 //        if ($request->input('age') <= 200) {
 //            return redirect('foo');

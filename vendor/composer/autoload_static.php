@@ -21,6 +21,7 @@ class ComposerStaticInitcfd7f7bd0ce7e17d0a74a568adc0555f
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         'bee9632da3ca00a99623b9c35d0c4f8b' => __DIR__ . '/..' . '/laravel/lumen-framework/src/helpers.php',
         '6c5807191b9f9db9cef17d02b18ab4ba' => __DIR__ . '/..' . '/wangju/ding-notice/src/helpers.php',
+        '0634e37dec6b02ae99b6f39187ea78ac' => __DIR__ . '/../..' . '/app/Helper/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
