@@ -1704,7 +1704,7 @@ class Builder
         $results = $this->processor->processSelect($this, $this->runSelect());
 
         $this->columns = $original;
-
+        //封装成集合
         return collect($results);
     }
 

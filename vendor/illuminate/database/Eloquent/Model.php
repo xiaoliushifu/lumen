@@ -1373,7 +1373,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
     /**
      * Dynamically retrieve attributes on the model.
-     *
+     * 动态地从Model里获得属性值
      * @param  string  $key
      * @return mixed
      */

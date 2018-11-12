@@ -39,7 +39,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Create a new collection.
-     *
+     * 创建集合实例，真正数据存在items属性里
      * @param  mixed  $items
      * @return void
      */
@@ -105,7 +105,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get all of the items in the collection.
-     *
+     * 就是返回实际的数组信息
      * @return array
      */
     public function all()
@@ -576,7 +576,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get the first item from the collection.
-     *
+     * 集合里取出第一个元素
      * @param  callable|null  $callback
      * @param  mixed  $default
      * @return mixed
@@ -1745,7 +1745,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Results array of items from Collection or Arrayable.
-     *
+     * 总之把它弄成数组（元素可能是对象或者标量）
      * @param  mixed  $items
      * @return array
      */

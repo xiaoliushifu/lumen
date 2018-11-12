@@ -335,6 +335,7 @@ trait RoutesRequests
      */
     protected function callLumenController($instance, $method, $routeInfo)
     {
+        //先看看有没有控制器层级的中间件
         $middleware = $instance->getMiddlewareForMethod($method);
 
         if (count($middleware) > 0) {

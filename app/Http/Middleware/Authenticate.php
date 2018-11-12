@@ -9,14 +9,14 @@ class Authenticate
 {
     /**
      * The authentication guard factory instance.
-     *
+     * guard工厂类，它管理guard的生产
      * @var \Illuminate\Contracts\Auth\Factory
      */
     protected $auth;
 
     /**
      * Create a new middleware instance.
-     *
+     * $auth就是manager
      * @param  \Illuminate\Contracts\Auth\Factory  $auth
      * @return void
      */

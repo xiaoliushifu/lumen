@@ -6,19 +6,19 @@ use Illuminate\Support\Str;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-
+//provider在这里扮演了啥角色？
 class EloquentUserProvider implements UserProvider
 {
     /**
      * The hasher implementation.
-     *
+     * 散列算法实现的类
      * @var \Illuminate\Contracts\Hashing\Hasher
      */
     protected $hasher;
 
     /**
      * The Eloquent user model.
-     *
+     * 用户模型实例
      * @var string
      */
     protected $model;
@@ -95,7 +95,7 @@ class EloquentUserProvider implements UserProvider
 
     /**
      * Retrieve a user by the given credentials.
-     *
+     * 根据密码获得用户
      * @param  array  $credentials
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
@@ -123,7 +123,7 @@ class EloquentUserProvider implements UserProvider
 
     /**
      * Validate a user against the given credentials.
-     *
+     * 验证某用户是否匹配它的认证信息（就是密码对不对）
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @param  array  $credentials
      * @return bool

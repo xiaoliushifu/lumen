@@ -49,7 +49,7 @@ class BcryptHasher implements HasherContract
         if (strlen($hashedValue) === 0) {
             return false;
         }
-
+        //password_verify散列算法验证
         return password_verify($value, $hashedValue);
     }
 
