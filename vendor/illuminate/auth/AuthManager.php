@@ -175,7 +175,7 @@ class AuthManager implements FactoryContract
 
     /**
      * Get the default authentication driver name.
-     *
+     * 直接从config里读取，注意点（.）语法
      * @return string
      */
     public function getDefaultDriver()

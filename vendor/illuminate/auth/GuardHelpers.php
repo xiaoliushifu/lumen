@@ -42,7 +42,7 @@ trait GuardHelpers
 
     /**
      * Determine if the current user is authenticated.
-     *
+     * 所谓认证否，就是
      * @return bool
      */
     public function check()
@@ -74,7 +74,7 @@ trait GuardHelpers
 
     /**
      * Set the current user.
-     *
+     * 设置登陆用户实例到guard,就标明认证成功，用户是登陆状态
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return $this
      */
