@@ -7,7 +7,8 @@ use Dotenv\Exception\InvalidPathException;
 
 /**
  * This is the loaded class.
- *
+ * Loader就是ENV包里实现加载功能的类，它有责任通过【读取硬盘文件，加载变量】完成任务，
+ * 还有过滤【注释符号#】【export】安全的作用
  * It's responsible for loading variables by reading a file from disk and:
  * - stripping comments beginning with a `#`,
  * - parsing lines that look shell variable setters, e.g `export key = value`, `key="value"`.
@@ -23,14 +24,14 @@ class Loader
 
     /**
      * Are we immutable?
-     *
+     * 是否允许覆盖，后续同名的环境变量覆盖之前的环境变量
      * @var bool
      */
     protected $immutable;
 
     /**
      * The list of environment variables declared inside the 'env' file.
-     *
+     * 只存储环境变量的名字
      * @var array
      */
     public $variableNames = array();
@@ -93,8 +94,9 @@ class Loader
     }
 
     /**
+     * 存在且可读性，我想说得是，这个方法的命名非常有意思 Ensure
      * Ensures the given filePath is readable.
-     *
+     * 否则抛异常
      * @throws \Dotenv\Exception\InvalidPathException
      *
      * @return void
@@ -107,13 +109,15 @@ class Loader
     }
 
     /**
+     * 注意这个方法的命名 Normalise,就是正常化（就是做一些过滤，修剪操作确保没有问题，达到正常化）
      * Normalise the given environment variable.
      *
      * Takes value as passed in by developer and:
+     * 拆分
      * - ensures we're dealing with a separate name and value, breaking apart the name string if needed,
-     * - cleaning the value of quotes,
+     * - cleaning the value of quotes, 去除引号
      * - cleaning the name of quotes,
-     * - resolving nested variables.
+     * - resolving nested variables. 解析嵌套变量
      *
      * @param string $name
      * @param string $value
@@ -122,8 +126,9 @@ class Loader
      */
     protected function normaliseEnvironmentVariable($name, $value)
     {
+        //拆分，过滤$name,过滤$value
         list($name, $value) = $this->processFilters($name, $value);
-
+        // 是否嵌套变量,比如 ${APP_ENV}
         $value = $this->resolveNestedVariables($value);
 
         return array($name, $value);
@@ -141,16 +146,22 @@ class Loader
      */
     public function processFilters($name, $value)
     {
-        list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);
-        list($name, $value) = $this->sanitiseVariableName($name, $value);
-        list($name, $value) = $this->sanitiseVariableValue($name, $value);
+        list($name, $value) = $this->splitCompoundStringIntoParts($name, $value);//拆分
+        list($name, $value) = $this->sanitiseVariableName($name, $value);//过滤$name
+        list($name, $value) = $this->sanitiseVariableValue($name, $value);//过滤$value
 
         return array($name, $value);
     }
 
     /**
      * Read lines from the file, auto detecting line endings.
-     *
+     * 这个方法也是有意思，使用自己的习惯，又不污染php原有的功能
+     * 那就是：
+     *  1先读取PHP原有的变量auto_detect_line_endings配置
+     *  2设置自己的配置
+     *  3使用自己的功能
+     *  4还原php原有的配置
+     * 类似这样的用法，以后还会见到很多的。
      * @param string $filePath
      *
      * @return array
@@ -168,7 +179,7 @@ class Loader
 
     /**
      * Determine if the line in the file is a comment, e.g. begins with a #.
-     *
+     * 从这里知道了,.env文件里如何写注释：以#开头
      * @param string $line
      *
      * @return bool
@@ -182,7 +193,8 @@ class Loader
 
     /**
      * Determine if the given line looks like it's setting a variable.
-     *
+     * 我还是想说，这个方法名字looklike有意思，不懂点英语还真不知道
+     * php命名函数还能这么用
      * @param string $line
      *
      * @return bool
@@ -194,7 +206,7 @@ class Loader
 
     /**
      * Split the compound string into parts.
-     *
+     * 就像注释所说，这个方法的名字就是五个单词构成的。split-compound-string-into-part
      * If the `$name` contains an `=` sign, then we split it into 2 parts, a `name` & `value`
      * disregarding the `$value` passed in.
      *
@@ -250,6 +262,7 @@ class Loader
             $value = str_replace("\\$quote", $quote, $value);
             $value = str_replace('\\\\', '\\', $value);
         } else {
+            //从这里可以看出，env文件里的注释还可以写在行的末尾
             $parts = explode(' #', $value, 2);
             $value = trim($parts[0]);
 
@@ -269,7 +282,7 @@ class Loader
 
     /**
      * Resolve the nested variables.
-     *
+     * 支持嵌套，高级不？
      * Look for ${varname} patterns in the variable value and replace with an
      * existing environment variable.
      *
@@ -327,13 +340,14 @@ class Loader
 
     /**
      * Search the different places for environment variables and return first value found.
-     *
+     * 按照优先级搜索环境变量，注意第一次见到使用switch(true)
      * @param string $name
      *
      * @return string|null
      */
     public function getEnvironmentVariable($name)
     {
+        //这种用法有意思吗？true这里就是布尔，并不是一定转化为1，因为switch语法支持表达式？
         switch (true) {
             case array_key_exists($name, $_ENV):
                 return $_ENV[$name];
@@ -368,6 +382,8 @@ class Loader
 
         // Don't overwrite existing environment variables if we're immutable
         // Ruby's dotenv does this with `ENV[key] ||= value`.
+         //immutable 这里明白了，就是说环境变量是否允许覆盖和修改
+        //mutable 可修改可变化的；immutable就是不可更改的
         if ($this->immutable && $this->getEnvironmentVariable($name) !== null) {
             return;
         }
@@ -379,19 +395,21 @@ class Loader
         }
 
         if (function_exists('putenv')) {
+            //这里是通过php的方式设置操作系统的环境变量（用户级别）
             putenv("$name=$value");
         }
-
+        //两个超全局数组里也保留一份
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
 
     /**
      * Clear an environment variable.
-     *
+     * 清除某个环境变量
      * This is not (currently) used by Dotenv but is provided as a utility
      * method for 3rd party code.
      *
+     * 所谓清除，就是下述两行代码而已
      * This is done using:
      * - putenv,
      * - unset($_ENV, $_SERVER).

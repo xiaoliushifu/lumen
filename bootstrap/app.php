@@ -5,6 +5,8 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
+    //实例化Dotenv\Dotenv时只传递了路径，其实还可以传递第二个参数，默认是.env
+    //从这里可以看出，如果想修改.env的文件名，并且修改路径。只需修改俩参数即可。厉害不？
     (new Dotenv\Dotenv(__DIR__.'/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
