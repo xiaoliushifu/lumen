@@ -13,6 +13,10 @@
 namespace Composer\Autoload;
 
 /**
+ * 该类是composer实现【自动加载】的核心类
+ * 实现了所谓的 PSR-0,PSR-4,还有classmap三种加载模式
+ * 这三种模式是规范，某些人推荐出来逐渐形成的php世界都遵守的规范
+ * 这里就是按照规范实现【查找类，加载类】的过程，不包含实例化类。
  * ClassLoader implements a PSR-0, PSR-4 and classmap class loader.
  *
  *     $loader = new \Composer\Autoload\ClassLoader();
@@ -32,7 +36,7 @@ namespace Composer\Autoload;
  * the autoloader will first look for the class under the component/
  * directory, and it will then fallback to the framework/ directory if not
  * found before giving up.
- *
+ * 该类松散地基于Symfony的UniversalClassLoader修改而成（Symfony的又一贡献）
  * This class is loosely based on the Symfony UniversalClassLoader.
  *
  * @author Fabien Potencier <fabien@symfony.com>
@@ -43,16 +47,16 @@ namespace Composer\Autoload;
 class ClassLoader
 {
     // PSR-4
-    private $prefixLengthsPsr4 = array();
-    private $prefixDirsPsr4 = array();
-    private $fallbackDirsPsr4 = array();
+    private $prefixLengthsPsr4 = array();//通过autoload_static.php初始化
+    private $prefixDirsPsr4 = array();//通过autoload_static.php初始化
+    private $fallbackDirsPsr4 = array();//通过autoload_static.php初始化
 
     // PSR-0
-    private $prefixesPsr0 = array();
+    private $prefixesPsr0 = array();//通过autoload_static.php初始化
     private $fallbackDirsPsr0 = array();
 
     private $useIncludePath = false;
-    private $classMap = array();
+    private $classMap = array();//通过autoload_static.php初始化
     private $classMapAuthoritative = false;
     private $missingClasses = array();
     private $apcuPrefix;
@@ -294,7 +298,7 @@ class ClassLoader
 
     /**
      * Registers this instance as an autoloader.
-     *
+     * 注册自己的loadClass方法注册为【自动加载】函数，而且是加载队列之首
      * @param bool $prepend Whether to prepend the autoloader or not
      */
     public function register($prepend = false)
@@ -335,6 +339,7 @@ class ClassLoader
     public function findFile($class)
     {
         // class map lookup
+        //优先去映射数组里找
         if (isset($this->classMap[$class])) {
             return $this->classMap[$class];
         }
@@ -367,6 +372,12 @@ class ClassLoader
         return $file;
     }
 
+    /**
+     * 该方法是实现 psr-4,psr0的关键，没有细读
+     * @param $class
+     * @param $ext
+     * @return bool|string
+     */
     private function findFileWithExtension($class, $ext)
     {
         // PSR-4 lookup

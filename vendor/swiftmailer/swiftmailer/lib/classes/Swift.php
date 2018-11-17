@@ -63,9 +63,9 @@ abstract class Swift
 
     /**
      * Configure autoloading using Swift Mailer.
-     *
+     * Swift Mailer有自己的类加载功能，这里就是配置自己的【自动加载器】
      * This is designed to play nicely with other autoloaders.
-     *
+     * 在多个加载器共存的情况下（比如每个php组件包都有自己的加载逻辑），这是一个非常好的加载模式
      * @param mixed $callable A valid PHP callable that will be called when autoloading the first Swift class
      */
     public static function registerAutoload($callable = null)
@@ -73,6 +73,7 @@ abstract class Swift
         if (null !== $callable) {
             self::$inits[] = $callable;
         }
+        //注意，这里没有第二个，第三个参数，实则就是注册自己的【加载器】到PHP加载队列的队尾
         spl_autoload_register(['Swift', 'autoload']);
     }
 }
