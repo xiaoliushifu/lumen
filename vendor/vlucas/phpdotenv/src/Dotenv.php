@@ -6,7 +6,7 @@ use Dotenv\Exception\InvalidPathException;
 
 /**
  * This is the dotenv class.
- *
+ * DOtenv类是管理类，它的子对象loader是真正实现读取【.env】文件并加载环境变量的类
  * It's responsible for loading a `.env` file in the given directory and
  * setting the environment vars.
  */
@@ -14,14 +14,14 @@ class Dotenv
 {
     /**
      * The file path.
-     *
+     * 被加载文件的路径
      * @var string
      */
     protected $filePath;
 
     /**
      * The loader instance.
-     *
+     * 加载器实例，子对象
      * @var \Dotenv\Loader|null
      */
     protected $loader;
@@ -30,7 +30,7 @@ class Dotenv
      * Create a new dotenv instance.
      *
      * @param string $path
-     * @param string $file
+     * @param string $file 默认是.env文件
      *
      * @return void
      */
@@ -120,7 +120,7 @@ class Dotenv
 
     /**
      * Get the list of environment variables declared inside the 'env' file.
-     *
+     * 返回环境变量的名字列表
      * @return array
      */
     public function getEnvironmentVariableNames()
