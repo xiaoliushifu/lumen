@@ -1,5 +1,7 @@
 <?php
 
+//很多框架的第一步，几乎都是这一行代码，【首先引入composer的自动加载器】
+//Composer\Autoload\ClassLoader 就是composer的【自动加载器】
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
