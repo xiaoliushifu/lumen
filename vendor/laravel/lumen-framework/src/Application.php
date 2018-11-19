@@ -580,9 +580,9 @@ class Application extends Container
     /**
      * Configure and load the given component and provider.
      * 该方法是一个综合性的方法
-     *  1加载database配置文件
-     *  2注册服务提供器
-     *  3返回$app或者$config别名背后的容器对象
+     *  1加载xxxxx配置文件
+     *  2注册某组件的服务提供器
+     *  3返回刚刚注册的容器对象
      * @param  string  $config
      * @param  array|string  $providers
      * @param  string|null  $return

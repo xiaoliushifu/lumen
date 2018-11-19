@@ -5,7 +5,8 @@ namespace Illuminate\Auth;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-/**
+/** 
+ * 所有guard都会引入这些方法
  * These methods are typically the same across all guards.
  */
 trait GuardHelpers
@@ -42,7 +43,7 @@ trait GuardHelpers
 
     /**
      * Determine if the current user is authenticated.
-     * 所谓认证否，就是
+     * 所谓认证否，就是能否获得user对象
      * @return bool
      */
     public function check()

@@ -476,7 +476,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Bind a new callback to an abstract's rebind event.
-     *
+     * 为rebind事件增加回调
      * @param  string    $abstract
      * @param  \Closure  $callback
      * @return mixed
@@ -484,7 +484,7 @@ class Container implements ArrayAccess, ContainerContract
     public function rebinding($abstract, Closure $callback)
     {
         $this->reboundCallbacks[$abstract = $this->getAlias($abstract)][] = $callback;
-
+        //判断是否绑定过，然后立即触发再次make。为啥？
         if ($this->bound($abstract)) {
             return $this->make($abstract);
         }
@@ -492,7 +492,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Refresh an instance on the given target and method.
-     *
+     * 刷新，注意下。暂不明
      * @param  string  $abstract
      * @param  mixed   $target
      * @param  string  $method

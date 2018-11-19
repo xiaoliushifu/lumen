@@ -14,7 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'api'),
+        //guard也可以在环境里配置
+        'guard' => env('AUTH_GUARD', 'original'),
     ],
 
     /*
@@ -43,6 +44,13 @@ return [
         //每个guards都有一个驱动和模型，一般是User
         'api' => [
             'driver' => 'jwt',
+            'provider' => 'users',
+        ],
+        //每个guards都有一个驱动和模型，模型一般是User
+        'original' => [
+            //驱动【api】对应Auth服务提供者的api。
+            //跟guard的名字无关
+            'driver' => 'api',
             'provider' => 'users',
         ],
     ],

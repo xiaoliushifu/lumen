@@ -57,20 +57,20 @@ class AuthManager implements FactoryContract
 
     /**
      * Attempt to get the guard from the local cache.
-     *
+     * 根据$name获得指定的guard，没有就走默认。
      * @param  string  $name
      * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
     public function guard($name = null)
     {
         $name = $name ?: $this->getDefaultDriver();
-
+        //解析的guard,都放置到guards数组里。
         return $this->guards[$name] ?? $this->guards[$name] = $this->resolve($name);
     }
 
     /**
      * Resolve the given guard.
-     *
+     * 解析出guard对象
      * @param  string  $name
      * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      *
@@ -83,11 +83,11 @@ class AuthManager implements FactoryContract
         if (is_null($config)) {
             throw new InvalidArgumentException("Auth guard [{$name}] is not defined.");
         }
-
+        //自定义的guard
         if (isset($this->customCreators[$config['driver']])) {
             return $this->callCustomCreator($name, $config);
         }
-
+        //自带的guard（类）
         $driverMethod = 'create'.ucfirst($config['driver']).'Driver';
 
         if (method_exists($this, $driverMethod)) {
@@ -106,6 +106,7 @@ class AuthManager implements FactoryContract
      */
     protected function callCustomCreator($name, array $config)
     {
+        //当初注册自定义guard的时候，就是一个回调。这里带着($this->app,$name,$config)三个参数执行
         return $this->customCreators[$config['driver']]($this->app, $name, $config);
     }
 
@@ -176,6 +177,7 @@ class AuthManager implements FactoryContract
     /**
      * Get the default authentication driver name.
      * 直接从config里读取，注意点（.）语法
+     * 默认guard，是在auth.php配置文件里决定的。
      * @return string
      */
     public function getDefaultDriver()
@@ -213,7 +215,7 @@ class AuthManager implements FactoryContract
 
     /**
      * Register a new callback based request guard.
-     *
+     * 注册一个自定义的guard，在Auth 服务提供者里调用
      * @param  string  $driver
      * @param  callable  $callback
      * @return $this
@@ -254,8 +256,8 @@ class AuthManager implements FactoryContract
 
     /**
      * Register a custom driver creator Closure.
-     *
-     * @param  string  $driver
+     * 所有自定义的guard,都存在这个customCreators数组里，将来获取guard的时候，优先判断这里
+     * @param  string  $driver 自定义的guard名字，lumen默认是api
      * @param  \Closure  $callback
      * @return $this
      */
@@ -282,7 +284,8 @@ class AuthManager implements FactoryContract
 
     /**
      * Dynamically call the default driver instance.
-     *
+     * 通过该魔术方法，把调用方法转移到guard对象上
+     * 虽然外部是 Auth::user()，其实是背后guard的user()方法。
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
