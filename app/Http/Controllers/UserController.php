@@ -25,10 +25,17 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
+        
         if ($request->has('name') && $request->has('password')) {
-            $user = User:: where("name", "=", $request->input('name'))
+            $name = $request->input('name');
+            $password = $request->input('password');
+            //attempt方法到底是否可以用，跟guard有关，lumen的api验证guard是RequestGuard，它没有。
+            //SessionGuard是有这个方法的。
+//            $token = Auth::attempt(['name'=>$name,'password'=>$password]);
+            
+            $user = User:: where("name",$name)
                 //这里没有使用系统自带的加密算法，而是直接在这里写出sha1算法
-                ->where("password", "=", sha1($this->salt.$request->input('password')))
+                ->where("password", "=", sha1($this->salt.$password))
                 ->first();
 
             if ($user) {
@@ -44,7 +51,7 @@ class UserController extends Controller
             return "登录信息不完整，请输入用户名和密码登录！";
         }
 
-        $token = Auth::attempt(['name'=>$request->input('name'),'password'=>$request->input('password')]);
+        
     }
 
     /**

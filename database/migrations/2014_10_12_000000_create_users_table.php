@@ -8,6 +8,8 @@ class CreateUsersTable extends Migration
 {
     /**
      * 默认的用户表迁移文件，拷贝自laravel的migrate
+     * 增加了api_token字段
+     * 删除了数据库里的表后，再次生成表，需要用 migrate:refresh 命令
      * Run the migrations.
      *
      * @return void
