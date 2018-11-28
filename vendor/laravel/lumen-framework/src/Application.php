@@ -509,18 +509,18 @@ class Application extends Container
 
     /**
      * Register container bindings for the application.
-     *
+     * 这是注册验证组件Validator时会用到翻译组件配合使用
      * @return void
      */
     protected function registerTranslationBindings()
     {
         $this->singleton('translator', function () {
-            $this->configure('app');
+            $this->configure('app');//需要app.php配置文件
 
-            $this->instance('path.lang', $this->getLanguagePath());
-
+            $this->instance('path.lang', $this->getLanguagePath());//获得资源里的语言文件
+            //再注册一个服务提供者
             $this->register('Illuminate\Translation\TranslationServiceProvider');
-
+            //然后立马解析出来
             return $this->make('translator');
         });
     }

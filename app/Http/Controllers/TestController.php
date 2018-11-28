@@ -2,15 +2,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Validates\UserValidate;
 use Illuminate\Support\Facades\Request;
 use App\Http\Services\TestService;
 
 class TestController extends Controller
 {
 
+    protected $validator;
+    public function __construct(UserValidate $validate)
+    {
+        $this->validator = $validate;
+    }
+
     //访问List方法
     public function getList()
     {
+        //交给UserValidate验证器的create场景验证下
+        $param = ['phone'=>'13589998981','name'=>3];
+        if ($err = $this->validator->check($param,UserValidate::SCENARIO_LIST)) {
+            return response()->json(['ServerTime' => time(), 'ServerNo' => 400, 'ResultData' => $err]);
+        }
         $cars = Car::all();
         return response()->json($cars);
     }

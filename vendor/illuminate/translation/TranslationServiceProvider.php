@@ -28,8 +28,8 @@ class TranslationServiceProvider extends ServiceProvider
             // When registering the translator component, we'll need to set the default
             // locale as well as the fallback locale. So, we'll grab the application
             // configuration so we can easily get both of these values from there.
-            $locale = $app['config']['app.locale'];
-
+            $locale = $app['config']['app.locale'];//读取locale的配置（语言）
+            //文件加载器和locale配置就可以加载出指定语言的映射了
             $trans = new Translator($loader, $locale);
 
             $trans->setFallback($app['config']['app.fallback_locale']);
@@ -40,7 +40,7 @@ class TranslationServiceProvider extends ServiceProvider
 
     /**
      * Register the translation line loader.
-     *
+     * 注册文件加载器
      * @return void
      */
     protected function registerLoader()
