@@ -48,14 +48,14 @@ class RequestGuard implements Guard
      */
     public function user()
     {
-        \Log::info('每次判断的时候');
+        \Log::info('每次判断user()的时候');
         // If we've already retrieved the user for the current request we can just
         // return it back immediately. We do not want to fetch the user data on
         // every call to this method because that would be tremendously slow.
         if (! is_null($this->user)) {
             return $this->user;
         }
-        \Log::info('第一次判断的时候');
+        \Log::info('第一次判断user()的时候');
         //在获得用户实例的时候，注意这三个参数，第三个参数涉及到了provider
         //每个guard获得user对象的方法不同
         return $this->user = call_user_func(

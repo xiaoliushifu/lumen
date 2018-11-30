@@ -299,7 +299,7 @@ class Request
 
     /**
      * Creates a new request with values from PHP's super globals.
-     * 根据PHP的几个超全局变量创建新的request对象
+     * 根据PHP的几个超全局变量创建新的request对象，这里Globals就是指那几个超全局数组
      * @return static
      */
     public static function createFromGlobals()
@@ -513,7 +513,7 @@ class Request
      * Clones the current request.
      * 该魔术方法是为了初始化新克隆对象的属性（非必要）
      * 这里明显是因为源对象SymfonyRequest对象里query,request,cookies,server这些属性其实都是子对象（php对象都是引用的。
-     * 所以如果仅仅克隆SymfonyRequest对象的话，这样新克隆的对象何源对象都会引用重复的query,request,cookies,server子对象
+     * 所以如果仅仅克隆SymfonyRequest对象的话，这样新克隆的对象和源对象都会引用重复的query,request,cookies,server子对象
      * 所以这里有必要把子对象也克隆一遍！
      * Note that the session is not cloned as duplicated requests
      * are most of the time sub-requests of the main one.
@@ -2062,7 +2062,7 @@ class Request
 
         return false;
     }
-    //开始创建http请求对象（基础就是根据PHP的几个超全局数组）
+    //开始创建http请求对象（基础就是根据PHP的几个超全局数组）$query就是$_GET,$request就是$_POST，第三个固定为[],其它名字不变
     private static function createRequestFromFactory(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
         if (self::$requestFactory) {

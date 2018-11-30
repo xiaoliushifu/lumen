@@ -171,7 +171,9 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Determine if the given abstract type has been resolved.
-     *
+     * 检测该抽象类型服务是否已经被解析过了，
+     * 该方法在bind()里调用。每次绑定的时候都判断，如果真的之前就解析过，那么需要做回调处理
+     * 因为之前解析过，所以之前一定绑定过，这里再次绑定，肯定有一些问题，虽然现在一时想不起来
      * @param  string  $abstract
      * @return bool
      */
@@ -180,7 +182,7 @@ class Container implements ArrayAccess, ContainerContract
         if ($this->isAlias($abstract)) {
             $abstract = $this->getAlias($abstract);
         }
-
+        //所谓是否解析过，就是是否存在instances数组里，或者resolved数组里，如此简单而已
         return isset($this->resolved[$abstract]) ||
                isset($this->instances[$abstract]);
     }
@@ -551,7 +553,7 @@ class Container implements ArrayAccess, ContainerContract
 
     /**
      * Call the given Closure / class@method and inject its dependencies.
-     *
+     * lumen为啥用这么复杂的方式，调用一个方法呢？？
      * @param  callable|string  $callback
      * @param  array  $parameters
      * @param  string|null  $defaultMethod

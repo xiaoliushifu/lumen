@@ -9,21 +9,21 @@ class HigherOrderCollectionProxy
 {
     /**
      * The collection being operated on.
-     *
+     * collection对象
      * @var \Illuminate\Support\Collection
      */
     protected $collection;
 
     /**
      * The method being proxied.
-     *
+     * 被代理的方法
      * @var string
      */
     protected $method;
 
     /**
      * Create a new proxy instance.
-     *
+     * 初始化时，必须给出集合对象
      * @param  \Illuminate\Support\Collection  $collection
      * @param  string  $method
      * @return void

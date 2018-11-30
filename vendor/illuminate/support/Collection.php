@@ -16,20 +16,28 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * 该集合类实现了好几个接口，有的是自定义的接口，有的是php内置接口
+ * 该集合经常包装【查询构造器】的查询结果返回。
+ * 即，sql查出的结果封装为当前的集合对象，而不是单纯的返回数组
+ * 基本上重写了好多php原生的数组方法，感觉有点多余
+ * Class Collection
+ * @package Illuminate\Support
+ */
 class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate, Jsonable, JsonSerializable
 {
     use Macroable;
 
     /**
      * The items contained in the collection.
-     *
+     * 该属性保存里Collection对象的核心数据，数组类型
      * @var array
      */
     protected $items = [];
 
     /**
      * The methods that can be proxied.
-     *
+     * 集合类可以代理的方法
      * @var array
      */
     protected static $proxies = [
@@ -39,7 +47,8 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Create a new collection.
-     * 创建集合实例，真正数据存在items属性里
+     * 创建集合实例，真正数据存在items属性里，
+     * 数据类型最终是数组
      * @param  mixed  $items
      * @return void
      */
@@ -50,7 +59,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Create a new collection instance if the value isn't one already.
-     *
+     * 实例化的快捷方法
      * @param  mixed  $items
      * @return static
      */
@@ -61,7 +70,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Wrap the given value in a collection if applicable.
-     *
+     * 再包一层，就是wrap
      * @param  mixed  $value
      * @return static
      */
@@ -74,7 +83,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get the underlying items from the given collection if applicable.
-     *
+     * 打开一层，就是unwrap。一般是返回集合对象里包含的数组数据
      * @param  array|static  $value
      * @return array
      */
@@ -253,7 +262,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Cross join with the given lists, returning all possible permutations.
-     *
+     * 合并列表，返回全排列（permutations：排列，数学名次）
      * @param  mixed  ...$lists
      * @return static
      */
@@ -266,11 +275,12 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Dump the collection and end the script.
-     *
+     * 打印然后退出php脚本
      * @return void
      */
     public function dd(...$args)
     {
+        //为啥要设置500呢？
         http_response_code(500);
 
         call_user_func_array([$this, 'dump'], $args);
@@ -1145,7 +1155,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Push an item onto the end of the collection.
-     *
+     * 添加到集合数据的末尾
      * @param  mixed  $value
      * @return $this
      */
@@ -1158,7 +1168,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Push all of the given items onto the collection.
-     *
+     * 依次把很多数据元素添加到集合到末尾
      * @param  \Traversable  $source
      * @return $this
      */
@@ -1175,7 +1185,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get and remove an item from the collection.
-     *
+     * 取得指定到元素然后再集合中删除它
      * @param  mixed  $key
      * @param  mixed  $default
      * @return mixed
@@ -1187,7 +1197,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Put an item in the collection by key.
-     *
+     * 按照键值对设置一个元素到集合里
      * @param  mixed  $key
      * @param  mixed  $value
      * @return $this
@@ -1201,7 +1211,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get one or a specified number of items randomly from the collection.
-     *
+     * 随机从集合里取得一个元素
      * @param  int|null  $number
      * @return mixed
      *
@@ -1218,7 +1228,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Reduce the collection to a single value.
-     *
+     * 用回调函数迭代地作用到每个元素，最终返回一个单一的值
      * @param  callable  $callback
      * @param  mixed  $initial
      * @return mixed
@@ -1249,7 +1259,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Reverse items order.
-     *
+     * 倒序返回集合
      * @return static
      */
     public function reverse()
@@ -1259,7 +1269,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Search the collection for a given value and return the corresponding key if successful.
-     *
+     * 从集合里搜索指定的元素，找到则返回它的下标
      * @param  mixed  $value
      * @param  bool  $strict
      * @return mixed
@@ -1281,7 +1291,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Get and remove the first item from the collection.
-     *
+     * 取得并删除集合的第一个元素
      * @return mixed
      */
     public function shift()
@@ -1291,7 +1301,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Shuffle the items in the collection.
-     *
+     * 打乱自己的集合顺序
      * @param  int  $seed
      * @return static
      */
@@ -1716,8 +1726,10 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
+            //直接添加到数组的末尾
             $this->items[] = $value;
         } else {
+            //否则就是关联数组
             $this->items[$key] = $value;
         }
     }
@@ -1751,20 +1763,27 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      */
     protected function getArrayableItems($items)
     {
+        //直接就是数组
         if (is_array($items)) {
             return $items;
+            //自己的实例
         } elseif ($items instanceof self) {
             return $items->all();
+            //实现了Arrayable接口的
         } elseif ($items instanceof Arrayable) {
             return $items->toArray();
+            //实现了Jsonable接口的
         } elseif ($items instanceof Jsonable) {
             return json_decode($items->toJson(), true);
+            // 实现了JsonSerializable接口的，这是php的预定义接口，通过实现jsonSerialize方法可以在json_encode时自定义json信息
         } elseif ($items instanceof JsonSerializable) {
             return $items->jsonSerialize();
+            // Traversable，这是php的预定义接口，该接口啥方法也没有。仅仅判断某类是不是能遍历而已。
         } elseif ($items instanceof Traversable) {
+            //这是一个把迭代器里的元素转成php数组的，php内置原生函数
             return iterator_to_array($items);
         }
-
+        //其它的，就强转为数组返回。
         return (array) $items;
     }
 
@@ -1781,7 +1800,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
 
     /**
      * Dynamically access collection proxies.
-     *
+     * 动态访问集合的代理方法
      * @param  string  $key
      * @return mixed
      *
@@ -1792,7 +1811,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
         if (! in_array($key, static::$proxies)) {
             throw new Exception("Property [{$key}] does not exist on this collection instance.");
         }
-
+        //又封装了一层
         return new HigherOrderCollectionProxy($this, $key);
     }
 }
