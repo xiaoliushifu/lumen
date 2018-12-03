@@ -7,6 +7,11 @@ require_once __DIR__.'/../vendor/autoload.php';
 try {
     //实例化Dotenv\Dotenv时只传递了路径，其实还可以传递第二个参数，默认是.env
     //从这里可以看出，如果想修改.env的文件名，并且修改路径。只需修改俩参数即可。厉害不？
+    //如何多环境配置使用lumen,其实很简单，只需多写几个.env即可，名称不同
+    //比如.env.local;.env.test;.env.product
+    //如果想切换哪个环境，只需命令行一个Linux命令cp就行,把其它环境文件复制为.env就行
+    // cp .env.local .env
+    //这样lumen始终使用名为".env"的环境配置文件，随时使用 `cp` 命令切换就行
     (new Dotenv\Dotenv(__DIR__.'/../'))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
