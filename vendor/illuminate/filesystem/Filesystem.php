@@ -8,6 +8,11 @@ use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
+/**
+ * 文件系统组件，可以为任何其它服务调用，比如，作为【文件缓存驱动】的真正底层对象，创建目录，写入文件内容
+ * Class Filesystem
+ * @package Illuminate\Filesystem
+ */
 class Filesystem
 {
     use Macroable;
@@ -111,7 +116,7 @@ class Filesystem
 
     /**
      * Write the contents of a file.
-     *
+     * 直接就是底层PHP函数file_put_contents了
      * @param  string  $path
      * @param  string  $contents
      * @param  bool  $lock

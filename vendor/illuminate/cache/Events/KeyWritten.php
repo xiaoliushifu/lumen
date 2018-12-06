@@ -2,6 +2,11 @@
 
 namespace Illuminate\Cache\Events;
 
+/**
+ * 缓存预定义事件对象之一，在缓存项写入到缓存驱动后立即触发
+ * Class KeyWritten
+ * @package Illuminate\Cache\Events
+ */
 class KeyWritten extends CacheEvent
 {
     /**

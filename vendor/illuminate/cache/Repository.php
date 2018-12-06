@@ -19,6 +19,9 @@ use Illuminate\Contracts\Cache\Repository as CacheContract;
 
 /**
  * @mixin \Illuminate\Contracts\Cache\Store
+ * 缓存对象实例化之后，都被封装到这个对象的属性$store中
+ * Repository它是所有缓存驱动的统一体
+ * Repository既然是所有缓存对象的统一体，那么它也得实现
  */
 class Repository implements CacheContract, ArrayAccess
 {
@@ -29,7 +32,7 @@ class Repository implements CacheContract, ArrayAccess
 
     /**
      * The cache store implementation.
-     *
+     * 关键的缓存驱动对象，它是真正办事的
      * @var \Illuminate\Contracts\Cache\Store
      */
     protected $store;
@@ -43,7 +46,7 @@ class Repository implements CacheContract, ArrayAccess
 
     /**
      * The default number of minutes to store items.
-     *
+     * 默认缓存期限，在缓存统一体中设置
      * @var float|int
      */
     protected $default = 60;
@@ -82,7 +85,7 @@ class Repository implements CacheContract, ArrayAccess
         if (is_array($key)) {
             return $this->many($key);
         }
-
+        //通过store对象的get实现
         $value = $this->store->get($this->itemKey($key));
 
         // If we could not find the cache value, we will fire the missed event and get
@@ -193,7 +196,7 @@ class Repository implements CacheContract, ArrayAccess
 
         if (! is_null($minutes = $this->getMinutes($minutes))) {
             $this->store->put($this->itemKey($key), $value, $minutes);
-
+            //触发预定义事件 KeyWritten
             $this->event(new KeyWritten($key, $value, $minutes));
         }
     }
@@ -430,7 +433,7 @@ class Repository implements CacheContract, ArrayAccess
 
     /**
      * Format the key for a cache item.
-     *
+     * 格式化缓存key的方法，对于【文件缓存驱动】来说，直接返回即可。
      * @param  string  $key
      * @return string
      */
@@ -474,13 +477,14 @@ class Repository implements CacheContract, ArrayAccess
 
     /**
      * Fire an event for this cache instance.
-     *
+     * 触发指定的事件$event
      * @param  string  $event
      * @return void
      */
     protected function event($event)
     {
         if (isset($this->events)) {
+            //其实是执行派发器的diapatch方法，类似Yii2的trigger吧
             $this->events->dispatch($event);
         }
     }

@@ -27,7 +27,8 @@ class FileStore implements Store
 
     /**
      * Create a new file cache store instance.
-     *
+     * 从这里看到，所谓【文件缓存驱动】也封装了files这个子对象。这个子对象是谁呢？
+     * 说白了，既然【文件缓存驱动】所以就是Filesystem对象了，包含在本地磁盘上的创建文件，删除文件这些操作，来具体实现文件驱动的缓存逻辑
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string  $directory
      * @return void
@@ -206,12 +207,12 @@ class FileStore implements Store
 
     /**
      * Get the full path for the given cache key.
-     *
+     * 根据缓存的key决定它的全路径
      * @param  string  $key
      * @return string
      */
     protected function path($key)
-    {
+    {//按照前俩字符是第一级目录，再俩字符为第二级目录，ab/cd/abcddfdfdfdf
         $parts = array_slice(str_split($hash = sha1($key), 2), 0, 2);
 
         return $this->directory.'/'.implode('/', $parts).'/'.$hash;

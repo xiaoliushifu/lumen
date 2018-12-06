@@ -5,6 +5,7 @@ use App\Models\Car;
 use App\Validates\UserValidate;
 use Illuminate\Support\Facades\Request;
 use App\Http\Services\TestService;
+use Illuminate\Support\Facades\Cache;
 
 class TestController extends Controller
 {
@@ -31,6 +32,10 @@ class TestController extends Controller
     //我们一般直接new
     public function getTest()
     {
+        $ret = Cache::put('Hello','liushifu',3);
+        var_dump($ret);
+        $ret1 = Cache::get('Hello');
+        var_dump($ret1);
         //使用app()快捷函数从容器中实例化我们的对象，这种方式不用引入
 //        $test = app('test');
         //直接实例化service当然需要引入

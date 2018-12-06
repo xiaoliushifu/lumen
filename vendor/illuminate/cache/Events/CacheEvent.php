@@ -2,6 +2,13 @@
 
 namespace Illuminate\Cache\Events;
 
+/**
+ * 缓存事件的抽象类
+ * 基本涵盖了缓存整个体系下预定义的所有事件的共性操作
+ * 它就是最高的事件基类
+ * Class CacheEvent
+ * @package Illuminate\Cache\Events
+ */
 abstract class CacheEvent
 {
     /**

@@ -175,7 +175,7 @@ class Dispatcher implements DispatcherContract
 
     /**
      * Fire an event and call the listeners.
-     *
+     * 这是laravel框架事件的触发开始，类似于之前见到的trigger()
      * @param  string|object  $event
      * @param  mixed  $payload
      * @param  bool  $halt
