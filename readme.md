@@ -1,3 +1,14 @@
+##开始
+下载后，应该有vendor,没有根据.lock文件·composer update·就行
+
+默认使用本地配置文件，走下面的copy命令
+```
+copy .env.local .env
+```
+
+## 数据库
+没有呢
+
 # Lumen PHP 框架
 
 [![构建状态](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
@@ -11,10 +22,6 @@ Laravel Lumen 是一个快速构建Web应用的PHP微框架，有着极富表现
 ## 官方文档
 
 框架的文档可以在这里找到 [Lumen website](http://lumen.laravel.com/docs).
-
-## 安全漏洞
-
-如果你在使用lumen过程中发现任何安全漏洞问题 请向 Taylor Otwell 先生的邮箱地址taylor@laravel.com.发邮件，所有安全漏洞都会得到及时处理
 
 ## 版权
 
